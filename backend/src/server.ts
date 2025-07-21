@@ -24,10 +24,10 @@ app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true,
 }));
-app.use('/images', express.static(join(__dirname, 'public/images'))); // Adjusted path to be relative to __dirname
+app.use('/images', express.static(join(__dirname, 'public/images')));
 
 // Routes
-app.use('/api/restaurants', restaurantsRoutes); // Prefixed routes for clarity
+app.use('/api/restaurants', restaurantsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 
@@ -60,6 +60,5 @@ const startServer = async () => {
   }
 };
 
-startServer();
 
 export default app;
