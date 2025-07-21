@@ -52,6 +52,10 @@ export default function Checkout() {
 
   const selectedDeal = location.state?.selectedDeal as Deal | undefined;
 
+
+
+  
+
   useEffect(() => {
     if (selectedDeal && !cart.some((item) => item._id === `deal-${selectedDeal.title}`)) {
       const dealItem: Burger = {

@@ -8,6 +8,13 @@ export default defineConfig({
   server: {
     host: 'localhost', // Allow external connections
     port:   5173 ,// Default port, adjust if different
+    proxy: {
+      '/api': {
+        target: 'https://mern-burger-app.onrender.com', // Deployed backend
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''), // Remove /api prefix if needed
+      },
+    },
   },
   plugins: [
     react(), 

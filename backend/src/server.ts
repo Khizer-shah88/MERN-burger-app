@@ -21,7 +21,11 @@ console.log('Environment variables:', process.env); // Debug environment vars
 
 app.use(express.json());
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+ origin: [
+    process.env.FRONTEND_URL || 'http://localhost:5173', // Development
+    'http://localhost:4173', // Vite preview port
+    'https://mern-burger-app-frontend.onrender.com' // Deployed frontend (once deployed)
+  ],
   credentials: true,
 }));
 app.use('/images', express.static(join(__dirname, 'public/images')));

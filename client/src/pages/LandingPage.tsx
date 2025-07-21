@@ -71,8 +71,8 @@ export default function Landing() {
 useEffect(() => {
     const fetchRestaurants = async () => {
       try {
-        console.log('Fetching restaurants from http://localhost:5001/api/restaurants');
-        const response = await fetch("http://localhost:5001/api/restaurants", {
+        console.log('Fetching restaurants from https://mern-burger-app.onrender.com/api/restaurants');
+        const response = await fetch("https://mern-burger-app.onrender.com/api/restaurants", {
           method: 'GET',
           headers: { 'Content-Type': 'application/json' },
         });
