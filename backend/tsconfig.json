@@ -3,13 +3,14 @@
     "target": "ES2020",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "./dist",
-    "rootDir": "./src",
+    "outDir": "./dist", // Output to backend/dist
+    "rootDir": "./src", // Source files in backend/src
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "sourceMap": true // Add source maps for debugging
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]

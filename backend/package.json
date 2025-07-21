@@ -4,8 +4,9 @@
   "type": "module",
   "main": "dist/server.js",
   "scripts": {
-    "start": "npm run build && node dist/server.js",
+    "start": "node dist/server.js",
     "build": "tsc",
+    "postbuild": "echo 'Build output checked:' && ls -la dist || dir dist", 
     "dev": "tsx watch src/server.ts"
   },
   "dependencies": {
