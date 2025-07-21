@@ -15,10 +15,10 @@ dotenv.config();
 
 const app = express();
 
-// Port configuration for Render compatibility
 const PORT = process.env.PORT || 5001;
 
-// Middleware
+console.log('Environment variables:', process.env); // Debug environment vars
+
 app.use(express.json());
 app.use(cors({
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
@@ -26,14 +26,12 @@ app.use(cors({
 }));
 app.use('/images', express.static(join(__dirname, 'public/images')));
 
-// Routes
 app.use('/api/restaurants', restaurantsRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 
-// Error handling middleware
 app.use(((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('Error:', err.stack);
+  console.error('Error middleware:', err.stack);
   res.status(500).json({
     success: false,
     error: 'Internal Server Error',
@@ -46,19 +44,24 @@ app.get('/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'Server is healthy' });
 });
 
-// Start server after MongoDB connection
+// Start server
 const startServer = async () => {
   try {
+    console.log('Attempting to connect to MongoDB...');
     await connectDB();
     console.log('Connected to MongoDB');
     app.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to connect to MongoDB:', error);
-    process.exit(1);
+    console.error('Server startup error:', error);
+    process.exit(1); // Exit with error code
   }
 };
 
+startServer().catch((error) => {
+  console.error('Uncaught error during server start:', error);
+  process.exit(1);
+});
 
-export default app;
+export default app; // Export for testing

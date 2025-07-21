@@ -9,3 +9,4 @@ const orderSchema = new Schema({
     items: [{ restaurantId: { type: String, ref: 'Restaurant' }, quantity: Number, price: Number, itemTotal: Number }],
 });
 export default mongoose.model('Order', orderSchema);
+//# sourceMappingURL=Order.js.map

@@ -22,3 +22,4 @@ router.post('/auth/register', registerUser);
  */
 router.post('/auth/login', loginUser);
 export default router;
+//# sourceMappingURL=authRoutes.js.map

@@ -8,3 +8,4 @@ const restaurantSchema = new Schema({
     popular: { type: Boolean, default: false },
 }, { collection: 'restaurants' });
 export default mongoose.model('Restaurant', restaurantSchema);
+//# sourceMappingURL=Restaurant.js.map

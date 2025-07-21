@@ -5,3 +5,4 @@ router.post('/orders', placeOrder); // Removed authenticateToken
 router.get('/orders', getUserOrders); // Removed authenticateToken
 router.patch('/orders/:id/status', updateOrderStatus); // Removed authenticateToken
 export default router;
+//# sourceMappingURL=orderRoutes.js.map

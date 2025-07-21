@@ -8,3 +8,4 @@ router.post('/restaurants', addRestaurant);
 // POST /api/restaurants/initialize - Create initial restaurants
 router.post('/restaurants/initialize', createInitialRestaurants);
 export default router;
+//# sourceMappingURL=restaurantRoutes.js.map

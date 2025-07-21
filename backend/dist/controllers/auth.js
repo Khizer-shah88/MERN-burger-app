@@ -58,3 +58,4 @@ export const loginUser = async (req, res) => {
         res.status(500).json({ error: 'Internal server error: ' + err.message });
     }
 };
+//# sourceMappingURL=auth.js.map

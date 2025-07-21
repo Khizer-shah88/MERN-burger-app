@@ -6,3 +6,4 @@ const userSchema = new Schema({
     createdAt: { type: Date, default: Date.now },
 });
 export default mongoose.model('User', userSchema);
+//# sourceMappingURL=User.js.map
