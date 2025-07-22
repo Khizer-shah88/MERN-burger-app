@@ -1,71 +1,62 @@
-import express, { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import path from 'path';
 import connectDB from './config/db.js';
 import restaurantsRoutes from './routes/restaurantRoutes.js';
-import orderRoutes from './routes/orderRoutes.js';
+
+import orderRoutes from './routes/orderRoutes.js'; // New import
 import authRoutes from './routes/authRoutes.js';
 
+// Load environment variables
+dotenv.config();
+
+// Initialize Express app
+const app = express();
+const PORT = process.env.PORT || 5001;
+
+// Middleware for JSON parsing
+app.use(express.json());
+
+// CORS configuration with dynamic frontend URL or fallback
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  credentials: true, // Allow cookies/credentials if needed
+}));
+
+// Serve static files for images (optional, since you’re using default URLs now)
+// Fix for __dirname not defined in ES module scope
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-dotenv.config();
-
-const app = express();
-
-const PORT = process.env.PORT || 5001;
-
-console.log('Environment variables:', process.env); // Debug environment vars
-
-app.use(express.json());
-app.use(cors({
- origin: [
-    process.env.FRONTEND_URL || 'http://localhost:5173', // Development
-    'http://localhost:4173', // Vite preview port
-    'https://mern-burger-app-frontend.onrender.com' // Deployed frontend (once deployed)
-  ],
-  credentials: true,
-}));
-app.use('/images', express.static(join(__dirname, 'public/images')));
-
-app.use('/api/restaurants', restaurantsRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/orders', orderRoutes);
-
-app.use(((err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error('Error middleware:', err.stack);
-  res.status(500).json({
-    success: false,
-    error: 'Internal Server Error',
-    message: process.env.NODE_ENV === 'development' ? err.message : undefined,
-  });
-}) as ErrorRequestHandler);
-
-// Health check route
-app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'OK', message: 'Server is healthy' });
-});
-
-// Start server
-const startServer = async () => {
-  try {
-    console.log('Attempting to connect to MongoDB...');
-    await connectDB();
+app.use(express.static(path.join(__dirname, '../public/images')));
+   
+// Connect to MongoDB and start server
+connectDB()
+  .then(() => {
     console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+
+    // Routes
+    app.use('/api', restaurantsRoutes);
+    app.use('/api', authRoutes);
+    app.use('/api', orderRoutes); // Mount order routes
+
+    // Error handling middleware
+    app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+      console.error(err.stack);
+      res.status(500).json({ error: 'Something broke!' });
     });
-  } catch (error) {
-    console.error('Server startup error:', error);
-    process.exit(1); // Exit with error code
-  }
-};
 
-startServer().catch((error) => {
-  console.error('Uncaught error during server start:', error);
-  process.exit(1);
-});
+    // Start the server
+    app.listen(PORT, () => {
+      console.log(`Server running on http://localhost:${PORT}`);
+    });
+  })
+  .catch((error) => {
+    console.error('Failed to connect to MongoDB:', error);
+    process.exit(1); // Exit with failure if MongoDB connection fails
+  });
 
-export default app; // Export for testing
+export default app;

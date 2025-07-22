@@ -1,17 +1,35 @@
+// {
+//     "compilerOptions": {
+//       "target": "ES2020",
+//       "module": "NodeNext",
+//       "moduleResolution": "NodeNext",
+//       "outDir": "./dist",
+//       "rootDir": "./src",
+//       "strict": true,
+//       "esModuleInterop": true,
+//       "skipLibCheck": true,
+//       "forceConsistentCasingInFileNames": true
+//     },
+//     "include": ["src/**/*.d.ts", "src/**/*.ts"],
+//     "exclude": ["node_modules", "dist"]
+//   }
+
+
+
+
 {
   "compilerOptions": {
     "target": "ES2020",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "./dist", // Output to backend/dist
-    "rootDir": "./src", // Source files in backend/src
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "sourceMap": true // Add source maps for debugging
+    "types": ["node"] // Optional: Explicitly include Node.js types
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*.ts", "src/**/*.d.ts", "types/**/*.d.ts"], // Include types folder
   "exclude": ["node_modules", "dist"]
 }

@@ -6,7 +6,7 @@ export const authenticateToken = (req: Request, res: Response, next: NextFunctio
   if (!token) return res.status(401).json({ error: 'Authentication token required' });
 
   try {
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET || 'b6f9c7a2e4d5b8f1a3c9e7d2b4f6a8e0');
     (req as any).user = decoded; // Attach user to request object
     next();
   } catch (err) {
