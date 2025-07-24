@@ -1,7 +1,5 @@
 # Node modules
 node_modules/
-client/node_modules/
-backend/node_modules/
 
 # Build outputs
 client/dist/
