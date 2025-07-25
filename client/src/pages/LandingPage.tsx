@@ -105,8 +105,6 @@ useEffect(() => {
 
   
 
-  
-
   // Handle hash navigation
   useEffect(() => {
     if (location.hash) {
