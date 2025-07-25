@@ -9,7 +9,7 @@ export default defineConfig({
     port: 5173, // Default port for local development
     proxy: {
       '/api': {
-        target: 'http://localhost:5001', // Local backend for development
+        target: 'https://mern-burger-app.onrender.com', // Local backend for development
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''), // Remove /api prefix
       },
