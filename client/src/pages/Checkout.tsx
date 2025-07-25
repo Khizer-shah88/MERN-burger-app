@@ -33,8 +33,8 @@ interface Deal {
 
 const buttonHover = {
   scale: 1.05,
-  boxShadow: "0 25px 50px rgba(234, 179, 8, 0.35)",
-  transition: { duration: 0.5, ease: [0.19, 1, 0.22, 1] },
+  boxShadow: "0 15px 30px rgba(234, 179, 8, 0.3)",
+  transition: { duration: 0.4, ease: [0.25, 0.8, 0.25, 1] },
 };
 
 export default function Checkout() {
@@ -51,10 +51,6 @@ export default function Checkout() {
   const location = useLocation();
 
   const selectedDeal = location.state?.selectedDeal as Deal | undefined;
-
-
-
-  
 
   useEffect(() => {
     if (selectedDeal && !cart.some((item) => item._id === `deal-${selectedDeal.title}`)) {
@@ -171,117 +167,118 @@ export default function Checkout() {
 
   return (
     <motion.div
-      className="min-h-screen bg-[conic-gradient(at_top_right,_var(--tw-gradient-stops))] from-zinc-900 via-black to-zinc-800 text-white relative overflow-hidden"
+      className="min-h-screen bg-gradient-to-br from-zinc-900 via-black to-zinc-800 text-white relative overflow-hidden"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ duration: 1 }}
+      transition={{ duration: 0.8 }}
     >
-      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-[0.02] mix-blend-overlay pointer-events-none" />
-      <div className="absolute -top-40 -left-40 w-[500px] h-[500px] bg-yellow-500 rounded-full blur-[150px] opacity-[0.08] animate-pulse" />
-      <div className="absolute -bottom-40 -right-40 w-[500px] h-[500px] bg-orange-500 rounded-full blur-[150px] opacity-[0.08] animate-pulse" />
+      <div className="absolute inset-0 bg-[url('/noise.png')] opacity-5 mix-blend-overlay pointer-events-none" />
+      <div className="absolute -top-20 -left-20 w-60 h-60 md:w-96 md:h-96 bg-yellow-500/20 rounded-full blur-3xl opacity-30 animate-pulse-slow" />
+      <div className="absolute -bottom-20 -right-20 w-60 h-60 md:w-96 md:h-96 bg-orange-500/20 rounded-full blur-3xl opacity-30 animate-pulse-slow" />
 
       <motion.header
-        className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/70 backdrop-blur-2xl"
+        className="sticky top-0 z-50 w-full border-b border-white/10 bg-black/80 backdrop-blur-xl"
         initial={{ y: -100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 1, ease: [0.19, 1, 0.22, 1] }}
+        transition={{ duration: 0.6, ease: [0.25, 0.8, 0.25, 1] }}
       >
-        <div className="container flex h-16 items-center justify-between px-4 mx-auto">
-          <Link to="/" className="flex items-center gap-3 group">
+        <div className="container flex h-16 items-center justify-between px-4 mx-auto max-w-7xl">
+          <Link to="/" className="flex items-center gap-2 sm:gap-3 group">
             <div className="relative">
-              <UtensilsCrossed className="h-6 w-6 text-yellow-500 group-hover:rotate-12 transition-all duration-500" />
-              <div className="absolute inset-0 bg-yellow-500/20 blur-xl rounded-full transform group-hover:scale-[2.5] transition-transform duration-500" />
+              <UtensilsCrossed className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-400 group-hover:rotate-12 transition-transform duration-500" />
+              <div className="absolute inset-0 bg-yellow-400/20 blur-xl rounded-full transform group-hover:scale-150 transition-transform duration-500" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent bg-[length:200%_auto] hover:bg-[center_right_1rem] transition-all duration-500">
+            <span className="text-lg sm:text-xl font-bold bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 bg-clip-text text-transparent bg-[length:200%_auto] hover:bg-[center_right_1rem] transition-all duration-500">
               BurgerBite
             </span>
           </Link>
 
-          <div className="hidden md:flex items-center bg-zinc-800/30 backdrop-blur-lg rounded-full p-1.5 border border-white/5 shadow-lg">
+          <div className="hidden sm:flex items-center bg-zinc-800/50 backdrop-blur-lg rounded-full p-1 border border-white/10 shadow-md">
             <motion.button
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                !isPickup ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg" : "text-yellow-500 hover:bg-white/5"
+              className={`px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                !isPickup ? "bg-gradient-to-r from-yellow-400 to-orange-400 text-black shadow-md" : "text-yellow-400 hover:bg-white/10"
               }`}
               onClick={() => setIsPickup(false)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
               <Truck className="h-4 w-4" />
               Delivery
             </motion.button>
             <motion.button
-              className={`px-6 py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
-                isPickup ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg" : "text-yellow-500 hover:bg-white/5"
+              className={`px-4 py-2 sm:px-6 sm:py-2.5 rounded-full text-sm font-medium transition-all duration-300 flex items-center gap-2 ${
+                isPickup ? "bg-gradient-to-r from-yellow-400 to-orange-400 text-black shadow-md" : "text-yellow-400 hover:bg-white/10"
               }`}
               onClick={() => setIsPickup(true)}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+              whileHover={{ scale: 1.03 }}
+              whileTap={{ scale: 0.97 }}
             >
               <MapPin className="h-4 w-4" />
               Pickup
             </motion.button>
           </div>
 
-          <div className="flex items-center gap-2 md:hidden">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               variant="secondary"
-              className="bg-yellow-500 text-black hover:bg-yellow-400 border-2 border-yellow-600 hover:border-yellow-500 p-2 rounded-full"
+              className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-yellow-500 hover:border-yellow-400 p-2 rounded-full"
               onClick={() => navigate("/")}
             >
-              <ShoppingCart className="h-4 w-4" />
-              <span className="ml-1">{cart.length}</span>
+              <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5" />
+              <span className="ml-1 text-sm sm:text-base">{cart.length}</span>
             </Button>
             <button
-              className="text-orange-400"
+              className="text-orange-400 sm:hidden"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             >
-              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {isMenuOpen ? <X className="h-5 w-5 sm:h-6 sm:w-6" /> : <Menu className="h-5 w-5 sm:h-6 sm:w-6" />}
             </button>
-          </div>
-
-          <nav className="hidden md:flex gap-6 items-center">
-            <motion.div whileHover={buttonHover}>
+            <motion.div
+              className="hidden sm:block"
+              whileHover={buttonHover}
+            >
               <Button
-                className="bg-yellow-500 text-black hover:bg-yellow-400 border-2 border-yellow-600 hover:border-yellow-500 p-2 px-4 rounded-full"
+                className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-yellow-500 hover:border-yellow-400 px-3 py-2 sm:px-4 sm:py-2.5 rounded-full text-sm sm:text-base"
                 onClick={() => navigate("/")}
               >
                 Back to Menu
               </Button>
             </motion.div>
-          </nav>
+          </div>
 
           <AnimatePresence>
             {isMenuOpen && (
               <motion.div
-                className="md:hidden bg-black/95 p-4 fixed top-16 left-0 right-0 z-50"
+                className="sm:hidden bg-black/95 p-4 fixed top-16 left-0 right-0 z-50 border-b border-white/10"
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
               >
-                <div className="flex items-center justify-center bg-zinc-800 rounded-full p-1 mb-4">
+                <div className="flex items-center justify-center bg-zinc-800/50 rounded-full p-1 mb-4 border border-white/10">
                   <motion.button
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      !isPickup ? "bg-yellow-500 text-black" : "text-yellow-500 hover:bg-zinc-700"
+                      !isPickup ? "bg-yellow-400 text-black" : "text-yellow-400 hover:bg-white/10"
                     }`}
                     onClick={() => setIsPickup(false)}
                   >
-                    <Truck className="h-4 w-4 mr-2" />
+                    <Truck className="h-4 w-4 mr-1.5" />
                     Delivery
                   </motion.button>
                   <motion.button
                     className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                      isPickup ? "bg-yellow-500 text-black" : "text-yellow-500 hover:bg-zinc-700"
+                      isPickup ? "bg-yellow-400 text-black" : "text-yellow-400 hover:bg-white/10"
                     }`}
                     onClick={() => setIsPickup(true)}
                   >
-                    <MapPin className="h-4 w-4 mr-2" />
+                    <MapPin className="h-4 w-4 mr-1.5" />
                     Pickup
                   </motion.button>
                 </div>
-                <nav className="flex flex-col gap-4 items-center">
+                <nav className="flex flex-col gap-3 items-center">
                   <Button
-                    className="bg-yellow-500 text-black hover:bg-yellow-400 border-2 border-yellow-600 hover:border-yellow-500 p-2 px-4 rounded-full"
+                    className="bg-yellow-400 text-black hover:bg-yellow-300 border-2 border-yellow-500 hover:border-yellow-400 px-4 py-2 rounded-full text-sm"
                     onClick={() => {
                       setIsMenuOpen(false);
                       navigate("/");
@@ -296,34 +293,34 @@ export default function Checkout() {
         </div>
       </motion.header>
 
-      <div className="container mx-auto px-4 py-8 sm:py-20 max-w-7xl relative z-10">
+      <div className="container mx-auto px-4 py-6 sm:py-12 md:py-16 max-w-7xl relative z-10">
         <motion.h1
-          className="text-3xl sm:text-4xl md:text-5xl font-bold mb-8 sm:mb-12 text-center tracking-tight px-4"
+          className="text-2xl sm:text-3xl md:text-4xl font-bold mb-6 sm:mb-8 md:mb-10 text-center tracking-tight"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.6 }}
         >
-          <span className="bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 text-transparent bg-clip-text bg-[length:200%_auto] animate-gradient relative">
+          <span className="bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 text-transparent bg-clip-text bg-[length:200%_auto] animate-gradient relative">
             Checkout
-            <span className="absolute -bottom-1 left-0 w-full h-px bg-gradient-to-r from-yellow-500/0 via-yellow-500/50 to-yellow-500/0"></span>
+            <span className="absolute -bottom-1 left-0 w-full h-0.5 bg-gradient-to-r from-yellow-400/0 via-yellow-400/50 to-yellow-400/0"></span>
           </span>
         </motion.h1>
 
         {cart.length === 0 ? (
           <motion.div
-            className="max-w-md mx-auto text-center p-12 rounded-3xl bg-gradient-to-b from-zinc-800/50 to-zinc-900/50 backdrop-blur-2xl border border-white/10 shadow-2xl"
+            className="max-w-md mx-auto text-center p-8 sm:p-10 rounded-2xl bg-gradient-to-b from-zinc-800/40 to-zinc-900/40 backdrop-blur-xl border border-white/10 shadow-xl"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
+            transition={{ delay: 0.2, duration: 0.5 }}
           >
-            <div className="relative inline-block mb-8">
-              <ShoppingCart className="h-24 w-24 text-yellow-500" />
-              <div className="absolute inset-0 bg-yellow-500/20 blur-2xl rounded-full animate-pulse" />
+            <div className="relative inline-block mb-6">
+              <ShoppingCart className="h-16 w-16 sm:h-20 sm:w-20 text-yellow-400" />
+              <div className="absolute inset-0 bg-yellow-400/20 blur-2xl rounded-full animate-pulse-slow" />
             </div>
-            <p className="text-3xl text-gray-300 mb-10 font-medium">Your cart is empty</p>
+            <p className="text-xl sm:text-2xl text-gray-300 mb-8 font-medium">Your cart is empty</p>
             <motion.div whileHover={buttonHover} whileTap={{ scale: 0.98 }}>
               <Button
-                className="bg-gradient-to-r from-yellow-500 to-orange-500 text-black hover:from-yellow-400 hover:to-orange-400 px-12 py-6 rounded-2xl text-xl font-semibold shadow-xl hover:shadow-yellow-500/25 transition-all duration-500"
+                className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black hover:from-yellow-300 hover:to-orange-300 px-8 py-4 sm:px-10 sm:py-5 rounded-xl text-base sm:text-lg font-semibold shadow-lg hover:shadow-yellow-400/25 transition-all duration-400"
                 onClick={() => navigate("/")}
               >
                 Browse Menu
@@ -331,44 +328,42 @@ export default function Checkout() {
             </motion.div>
           </motion.div>
         ) : (
-          <div className="grid gap-6 sm:gap-12 lg:grid-cols-2">
+          <div className="grid gap-6 sm:gap-8 lg:grid-cols-2">
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               className="order-2 lg:order-1"
             >
-              <Card className="bg-gradient-to-b from-zinc-800/30 to-zinc-900/30 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden rounded-xl sm:rounded-2xl hover:border-yellow-500/20 transition-colors duration-500">
-                <CardHeader className="border-b border-white/10 p-4 sm:p-6">
-                  <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
+              <Card className="bg-gradient-to-b from-zinc-800/40 to-zinc-900/40 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl hover:border-yellow-400/20 transition-colors duration-400">
+                <CardHeader className="border-b border-white/10 p-4 sm:p-5">
+                  <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 text-transparent bg-clip-text">
                     Order Summary
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-6">
+                <CardContent className="space-y-3 sm:space-y-4 p-4 sm:p-5">
                   {cart.map((item) => (
                     <motion.div
                       key={item._id}
-                      className="group relative flex items-center justify-between p-3 sm:p-4 rounded-lg sm:rounded-xl bg-white/[0.03] border border-white/10 hover:border-yellow-500/30 transition-all duration-500"
+                      className="group relative flex items-center justify-between p-3 sm:p-4 rounded-lg bg-white/[0.03] border border-white/10 hover:border-yellow-400/30 transition-all duration-400"
                       whileHover={{ scale: 1.02, y: -2 }}
                     >
                       <div className="flex items-center gap-3 sm:gap-4">
-                        <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-lg sm:rounded-xl overflow-hidden ring-1 ring-yellow-500/20 group-hover:ring-yellow-500/40 transition-all duration-500">
+                        <div className="relative h-14 w-14 sm:h-16 sm:w-16 md:h-18 md:w-18 rounded-lg overflow-hidden ring-1 ring-yellow-400/20 group-hover:ring-yellow-400/40 transition-all duration-400">
                           <img
                             src={item.image}
                             alt={item.name}
-                            className="h-full w-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+                            className="h-full w-full object-cover transform group-hover:scale-105 transition-transform duration-400"
                             onError={(e) => (e.target as HTMLImageElement).src = "https://images.unsplash.com/photo-1568901346375-23c9450c58cd"}
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
+                          <h3 className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 text-transparent bg-clip-text">
                             {item.name}
                           </h3>
-                          <p className="text-zinc-400 text-lg mt-2">
-                            ${(item.price / 100 + (item.extraCheese ? 1 : 0) + (item.drink === "cola" ? 2.5 : item.drink === "lemonade" ? 2 : item.drink === "water" ? 1.5 : 0)).toFixed(
-                              2
-                            )}
+                          <p className="text-zinc-400 text-sm sm:text-base md:text-lg mt-1 sm:mt-2">
+                            ${(item.price / 100 + (item.extraCheese ? 1 : 0) + (item.drink === "cola" ? 2.5 : item.drink === "lemonade" ? 2 : item.drink === "water" ? 1.5 : 0)).toFixed(2)}
                             {item.drink && `, ${item.drink}`}
                             {item.extraCheese && ", Extra Cheese"}
                             {item.isDeal && " (Deal)"}
@@ -384,23 +379,23 @@ export default function Checkout() {
                             updateQuantity(item._id, newQuantity, item.drink, item.extraCheese);
                           }}
                           min="1"
-                          className="w-16 p-1 rounded bg-white/[0.03] border border-white/10 text-white text-center"
+                          className="w-14 sm:w-16 p-1 sm:p-1.5 rounded bg-white/[0.03] border border-white/10 text-white text-center text-sm sm:text-base"
                         />
                         <motion.button
-                          className="text-red-400 hover:text-red-300 p-4 rounded-full hover:bg-red-500/10 transition-all duration-300"
+                          className="text-red-400 hover:text-red-300 p-2 sm:p-3 rounded-full hover:bg-red-500/10 transition-all duration-300"
                           onClick={() => handleRemoveFromCart(item._id)}
                           whileHover={{ scale: 1.1, rotate: 12 }}
                           whileTap={{ scale: 0.9 }}
                         >
-                          <Trash2 className="h-6 w-6" />
+                          <Trash2 className="h-5 w-5 sm:h-6 sm:w-6" />
                         </motion.button>
                       </div>
                     </motion.div>
                   ))}
-                  <div className="mt-4 sm:mt-6 p-4 sm:p-6 rounded-lg sm:rounded-xl bg-gradient-to-r from-yellow-500/5 via-orange-500/5 to-yellow-500/5 border border-yellow-500/20 backdrop-blur-xl">
+                  <div className="mt-4 sm:mt-5 p-3 sm:p-4 rounded-lg bg-gradient-to-r from-yellow-400/10 via-orange-400/10 to-yellow-400/10 border border-yellow-400/20 backdrop-blur-xl">
                     <div className="flex justify-between items-center">
-                      <span className="text-base sm:text-lg text-gray-300 font-medium">Total Amount</span>
-                      <p className="text-xl sm:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-orange-500">
+                      <span className="text-sm sm:text-base md:text-lg text-gray-300 font-medium">Total Amount</span>
+                      <p className="text-lg sm:text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-400">
                         ${calculateTotal()}
                       </p>
                     </div>
@@ -412,124 +407,124 @@ export default function Checkout() {
             <motion.div
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6 }}
               className="order-1 lg:order-2"
             >
-              <Card className="bg-gradient-to-b from-zinc-800/30 to-zinc-900/30 backdrop-blur-2xl border border-white/10 shadow-2xl overflow-hidden rounded-xl sm:rounded-2xl hover:border-yellow-500/20 transition-colors duration-500">
-                <CardHeader className="border-b border-white/10 p-4 sm:p-6">
-                  <CardTitle className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
+              <Card className="bg-gradient-to-b from-zinc-800/40 to-zinc-900/40 backdrop-blur-xl border border-white/10 shadow-xl rounded-xl hover:border-yellow-400/20 transition-colors duration-400">
+                <CardHeader className="border-b border-white/10 p-4 sm:p-5">
+                  <CardTitle className="text-lg sm:text-xl md:text-2xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 text-transparent bg-clip-text">
                     Your Details
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4 sm:space-y-6 p-4 sm:p-6">
+                <CardContent className="space-y-4 sm:space-y-5 p-4 sm:p-5">
                   <div className="space-y-2">
-                    <label className="text-yellow-500 font-medium block text-sm sm:text-base">Name</label>
+                    <label className="text-yellow-400 font-medium block text-sm sm:text-base">Name</label>
                     <input
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="Enter your name"
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-zinc-500 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-300 text-sm sm:text-base backdrop-blur-xl"
+                      className="w-full p-2 sm:p-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-zinc-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-300 text-sm sm:text-base backdrop-blur-xl"
                     />
                   </div>
                   <div className="space-y-2">
-                    <label className="text-yellow-500 font-medium block text-sm sm:text-base">Phone Number</label>
+                    <label className="text-yellow-400 font-medium block text-sm sm:text-base">Phone Number</label>
                     <input
                       type="tel"
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value)}
                       placeholder="Enter your phone number"
-                      className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-zinc-500 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-300 text-sm sm:text-base backdrop-blur-xl"
+                      className="w-full p-2 sm:p-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-zinc-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-300 text-sm sm:text-base backdrop-blur-xl"
                     />
                   </div>
-                  <div className="p-1.5 sm:p-2 bg-white/5 rounded-xl sm:rounded-2xl border border-white/10">
+                  <div className="p-1 sm:p-1.5 bg-white/5 rounded-lg border border-white/10">
                     <div className="flex items-center gap-2 sm:gap-3">
                       <Button
-                        className={`flex-1 py-3 sm:py-5 rounded-lg sm:rounded-xl font-medium sm:font-semibold transition-all duration-500 text-base sm:text-lg ${
-                          !isPickup ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg" : "bg-transparent text-yellow-500 hover:bg-white/5"
+                        className={`flex-1 py-2 sm:py-3 rounded-lg font-medium transition-all duration-400 text-sm sm:text-base ${
+                          !isPickup ? "bg-gradient-to-r from-yellow-400 to-orange-400 text-black shadow-md" : "bg-transparent text-yellow-400 hover:bg-white/10"
                         }`}
                         onClick={() => setIsPickup(false)}
                       >
-                        <Truck className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
+                        <Truck className="h-4 w-4 mr-1.5" />
                         Delivery
                       </Button>
                       <Button
-                        className={`flex-1 py-3 sm:py-5 rounded-lg sm:rounded-xl font-medium sm:font-semibold transition-all duration-500 text-base sm:text-lg ${
-                          isPickup ? "bg-gradient-to-r from-yellow-500 to-orange-500 text-black shadow-lg" : "bg-transparent text-yellow-500 hover:bg-white/5"
+                        className={`flex-1 py-2 sm:py-3 rounded-lg font-medium transition-all duration-400 text-sm sm:text-base ${
+                          isPickup ? "bg-gradient-to-r from-yellow-400 to-orange-400 text-black shadow-md" : "bg-transparent text-yellow-400 hover:bg-white/10"
                         }`}
                         onClick={() => setIsPickup(true)}
                       >
-                        <MapPin className="h-4 w-4 sm:h-5 sm:w-5 mr-1.5 sm:mr-2" />
+                        <MapPin className="h-4 w-4 mr-1.5" />
                         Pickup
                       </Button>
                     </div>
                   </div>
                   {!isPickup && (
                     <div className="space-y-2">
-                      <label className="text-yellow-500 font-medium block text-sm sm:text-base">Delivery Address</label>
+                      <label className="text-yellow-400 font-medium block text-sm sm:text-base">Delivery Address</label>
                       <input
                         type="text"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         placeholder="Enter your delivery address"
-                        className="w-full p-2.5 sm:p-3 rounded-lg sm:rounded-xl bg-white/[0.03] border border-white/10 text-white placeholder-zinc-500 focus:border-yellow-500 focus:ring-2 focus:ring-yellow-500/20 transition-all duration-300 text-sm sm:text-base backdrop-blur-xl"
+                        className="w-full p-2 sm:p-3 rounded-lg bg-white/[0.03] border border-white/10 text-white placeholder-zinc-500 focus:border-yellow-400 focus:ring-2 focus:ring-yellow-400/20 transition-all duration-300 text-sm sm:text-base backdrop-blur-xl"
                       />
                     </div>
                   )}
                   <div className="space-y-2">
-                    <label className="text-yellow-500 font-medium block text-sm sm:text-base">Payment Method</label>
+                    <label className="text-yellow-400 font-medium block text-sm sm:text-base">Payment Method</label>
                     {paymentOptions.map((option) => (
-                      <label key={option.id} className="flex items-center gap-3 p-3 bg-white/[0.03] border border-white/10 rounded-lg hover:border-yellow-500/30 transition-all duration-300">
+                      <label key={option.id} className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 bg-white/[0.03] border border-white/10 rounded-lg hover:border-yellow-400/30 transition-all duration-300">
                         <input
                           type="radio"
                           name="paymentMethod"
                           value={option.id}
                           checked={paymentMethod === option.id}
                           onChange={(e) => setPaymentMethod(e.target.value)}
-                          className="text-yellow-500 focus:ring-yellow-500"
+                          className="text-yellow-400 focus:ring-yellow-400"
                         />
-                        <option.icon className="h-5 w-5 text-yellow-500" />
+                        <option.icon className="h-4 w-4 sm:h-5 sm:w-5 text-yellow-400" />
                         <span className="text-sm sm:text-base text-white">{option.label}</span>
                       </label>
                     ))}
                   </div>
                   {error && (
                     <motion.div
-                      className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6"
+                      className="bg-red-500/10 border border-red-500/20 rounded-lg p-3 sm:p-4"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.4 }}
+                      transition={{ duration: 0.3 }}
                     >
-                      <p className="text-red-400 text-lg">{error}</p>
+                      <p className="text-red-400 text-sm sm:text-base">{error}</p>
                     </motion.div>
                   )}
                   <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
                     <Button
-                      className="w-full bg-gradient-to-r from-yellow-500 via-orange-500 to-yellow-500 text-black hover:from-yellow-400 hover:via-orange-400 hover:to-yellow-400 p-3 sm:p-4 rounded-lg sm:rounded-xl font-bold text-base sm:text-lg shadow-xl hover:shadow-yellow-500/30 transition-all duration-500 disabled:opacity-50 relative overflow-hidden group"
+                      className="w-full bg-gradient-to-r from-yellow-400 via-orange-400 to-yellow-400 text-black hover:from-yellow-300 hover:via-orange-300 hover:to-yellow-300 p-3 sm:p-4 rounded-lg font-bold text-sm sm:text-base shadow-lg hover:shadow-yellow-400/30 transition-all duration-400 disabled:opacity-50 relative overflow-hidden group"
                       onClick={handlePlaceOrder}
                       disabled={loading}
                     >
                       {loading ? (
-                        <div className="flex items-center justify-center gap-4">
-                          <div className="w-6 h-6 border-3 border-black border-t-transparent rounded-full animate-spin" />
+                        <div className="flex items-center justify-center gap-3 sm:gap-4">
+                          <div className="w-5 h-5 sm:w-6 sm:h-6 border-2 border-black border-t-transparent rounded-full animate-spin" />
                           <span className="relative">
                             Processing
                             <span className="animate-pulse">...</span>
                           </span>
                         </div>
                       ) : (
-                        <span className="flex items-center justify-center gap-3 group-hover:scale-105 transition-transform duration-500">
+                        <span className="flex items-center justify-center gap-2 sm:gap-3 group-hover:scale-105 transition-transform duration-400">
                           Place Order
                           <motion.div
-                            className="w-6 h-6 rounded-full bg-black/20"
-                            animate={{ x: [0, 5, 0] }}
-                            transition={{ repeat: Infinity, duration: 1.5 }}
+                            className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-black/20"
+                            animate={{ x: [0, 4, 0] }}
+                            transition={{ repeat: Infinity, duration: 1.2 }}
                           >
                             →
                           </motion.div>
                         </span>
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/0 via-white/10 to-yellow-400/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-yellow-300/0 via-white/10 to-yellow-300/0 transform translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-800" />
                     </Button>
                   </motion.div>
                 </CardContent>

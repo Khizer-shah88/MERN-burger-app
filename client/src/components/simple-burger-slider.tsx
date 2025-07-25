@@ -15,10 +15,10 @@ import "swiper/css/effect-coverflow"
 import { CartContext } from "@/context/Context"
 
 interface Burger {
-  _id: string // Matches Context.tsx and MongoDB
+  _id: string
   name: string
   image: string
-  price: number // Dollars to match backend
+  price: number
   rating: number
   time: string
   description: string
@@ -124,48 +124,48 @@ export default function SimpleBurgerSlider() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br rounded-4xl ml-12 mr-12 mt-14 from-gray-900 via-black to-gray-800 py-20 md:py-32 overflow-hidden">
+    <div className="relative min-h-screen bg-gradient-to-br rounded-4xl ml-2 mr-2 md:ml-12 md:mr-12 mt-8 md:mt-14 from-gray-900 via-black to-gray-800 py-14 md:py-32 overflow-hidden">
       {/* Floating Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <motion.div
-          className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full opacity-5 blur-2xl"
+          className="absolute top-20 left-10 w-32 md:w-40 h-32 md:h-40 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full opacity-5 blur-2xl"
           animate={{ y: [0, -30, 0], x: [0, 20, 0] }}
           transition={{ duration: 8, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute top-60 right-20 w-32 h-32 bg-gradient-to-r from-yellow-300 to-yellow-400 rounded-full opacity-10 blur-xl"
+          className="absolute top-60 right-10 md:right-20 w-24 md:w-32 h-24 md:h-32 bg-gradient-to-r from-yellow-300 to-yellow-400 rounded-full opacity-10 blur-xl"
           animate={{ y: [0, 25, 0], x: [0, -25, 0] }}
           transition={{ duration: 10, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
         <motion.div
-          className="absolute bottom-40 left-1/3 w-48 h-48 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full opacity-5 blur-3xl"
+          className="absolute bottom-20 md:bottom-40 left-1/3 w-36 md:w-48 h-36 md:h-48 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full opacity-5 blur-3xl"
           animate={{ y: [0, -40, 0], x: [0, 30, 0] }}
           transition={{ duration: 12, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
         />
       </div>
 
-      <div className="container relative px-4 md:px-8 mx-auto max-w-7xl">
-        {/* Enhanced Header */}
-        <div className="text-center mb-16 md:mb-20">
+      <div className="container relative px-3 md:px-8 mx-auto max-w-7xl">
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-20">
           <motion.div
-            className="flex items-center justify-center gap-4 mb-6"
+            className="flex items-center justify-center gap-2 md:gap-4 mb-6"
             initial={{ opacity: 0, y: -30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
             <motion.div animate={sparkleAnimation}>
-              <Sparkles className="h-8 w-8 text-yellow-400" />
+              <Sparkles className="h-6 w-6 md:h-8 md:w-8 text-yellow-400" />
             </motion.div>
-            <span className="inline-block text-yellow-400 font-bold mb-3 px-6 py-3 bg-yellow-400/10 backdrop-blur-sm rounded-full text-sm border border-yellow-400/20 shadow-lg">
+            <span className="inline-block text-yellow-400 font-bold mb-3 px-4 md:px-6 py-2 md:py-3 bg-yellow-400/10 backdrop-blur-sm rounded-full text-xs md:text-sm border border-yellow-400/20 shadow-lg">
               🔥 OUR SPECIALTIES
             </span>
             <motion.div animate={sparkleAnimation}>
-              <Zap className="h-8 w-8 text-yellow-400" />
+              <Zap className="h-6 w-6 md:h-8 md:w-8 text-yellow-400" />
             </motion.div>
           </motion.div>
 
           <motion.h2
-            className="text-4xl md:text-5xl lg:text-7xl font-black mb-6 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent tracking-tight"
+            className="text-3xl md:text-5xl lg:text-7xl font-black mb-4 md:mb-6 bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 bg-clip-text text-transparent tracking-tight"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
@@ -174,17 +174,17 @@ export default function SimpleBurgerSlider() {
           </motion.h2>
 
           <motion.p
-            className="text-gray-300 text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+            className="text-gray-300 text-sm md:text-lg max-w-sm md:max-w-2xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.8 }}
           >
             Handcrafted masterpieces that define perfection
-            <span className="block text-yellow-400 text-base mt-2">✨ Each bite tells a story ✨</span>
+            <span className="block text-yellow-400 text-xs md:text-base mt-2">✨ Each bite tells a story ✨</span>
           </motion.p>
         </div>
 
-        {/* Enhanced Slider */}
+        {/* Slider */}
         <div className="relative group">
           <Swiper
             modules={[Navigation, Autoplay, EffectCoverflow]}
@@ -208,12 +208,13 @@ export default function SimpleBurgerSlider() {
             loop={true}
             centeredSlides={true}
             breakpoints={{
-              320: { slidesPerView: 1.2, spaceBetween: 20 },
-              480: { slidesPerView: 2, spaceBetween: 25 },
-              768: { slidesPerView: 3, spaceBetween: 30 },
-              1024: { slidesPerView: 4, spaceBetween: 35 },
+              320: { slidesPerView: 1.1, spaceBetween: 10 },
+              480: { slidesPerView: 1.5, spaceBetween: 15 },
+              640: { slidesPerView: 2, spaceBetween: 20 },
+              768: { slidesPerView: 3, spaceBetween: 25 },
+              1024: { slidesPerView: 4, spaceBetween: 30 },
             }}
-            className="static px-2 md:px-0 !overflow-visible"
+            className="static px-1 md:px-0 !overflow-visible"
           >
             {burgers.map((burger, index) => (
               <SwiperSlide key={burger._id}>
@@ -245,8 +246,8 @@ export default function SimpleBurgerSlider() {
                   </div>
 
                   <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gray-800/80 backdrop-blur-sm border border-yellow-400/20 hover:border-yellow-400/40 transition-all duration-500">
-                    {/* Enhanced Image Container */}
-                    <div className="relative h-72 overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800">
+                    {/* Image */}
+                    <div className="relative h-64 md:h-72 overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800">
                       <img
                         src={burger.image || "/placeholder.svg"}
                         alt={burger.name}
@@ -281,23 +282,23 @@ export default function SimpleBurgerSlider() {
                       </div>
                     </div>
 
-                    {/* Enhanced Content */}
-                    <div className="p-6 space-y-4">
+                    {/* Content */}
+                    <div className="p-4 md:p-6 space-y-4">
                       <div>
-                        <h3 className="text-xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent mb-2 group-hover:from-yellow-300 group-hover:to-yellow-400 transition-all duration-300">
+                        <h3 className="text-lg md:text-xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent mb-2 group-hover:from-yellow-300 group-hover:to-yellow-400 transition-all duration-300">
                           {burger.name}
                         </h3>
-                        <p className="text-gray-300 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-200 transition-colors">
+                        <p className="text-gray-300 text-xs md:text-sm leading-relaxed line-clamp-2 group-hover:text-gray-200 transition-colors">
                           {burger.description}
                         </p>
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+                        <span className="text-xl md:text-2xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
                           ${burger.price.toFixed(2)}
                         </span>
                         <motion.div
-                          className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-4 py-2 rounded-xl font-bold text-sm shadow-lg"
+                          className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-1.5 md:px-4 md:py-2 rounded-xl font-bold text-xs md:text-sm shadow-lg"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -311,27 +312,27 @@ export default function SimpleBurgerSlider() {
             ))}
           </Swiper>
 
-          {/* Enhanced Navigation Buttons */}
+          {/* Navigation Buttons */}
           <motion.button
-            className="swiper-button-prev hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-14 h-14 items-center justify-center bg-gray-800/80 backdrop-blur-sm rounded-full z-10 text-yellow-400 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-yellow-400 hover:text-black -translate-x-8 shadow-2xl border border-yellow-400/20"
+            className="swiper-button-prev hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 w-12 md:w-14 h-12 md:h-14 items-center justify-center bg-gray-800/80 backdrop-blur-sm rounded-full z-10 text-yellow-400 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-yellow-400 hover:text-black -translate-x-8 shadow-2xl border border-yellow-400/20"
             whileHover={{ scale: 1.1, boxShadow: "0 10px 25px rgba(234, 179, 8, 0.3)" }}
             whileTap={{ scale: 0.9 }}
           >
-            <ChevronLeft className="h-6 w-6" />
+            <ChevronLeft className="h-5 md:h-6 w-5 md:w-6" />
           </motion.button>
           <motion.button
-            className="swiper-button-next hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 w-14 h-14 items-center justify-center bg-gray-800/80 backdrop-blur-sm rounded-full z-10 text-yellow-400 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-yellow-400 hover:text-black translate-x-8 shadow-2xl border border-yellow-400/20"
+            className="swiper-button-next hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 w-12 md:w-14 h-12 md:h-14 items-center justify-center bg-gray-800/80 backdrop-blur-sm rounded-full z-10 text-yellow-400 opacity-0 group-hover:opacity-100 transition-all duration-500 hover:bg-yellow-400 hover:text-black translate-x-8 shadow-2xl border border-yellow-400/20"
             whileHover={{ scale: 1.1, boxShadow: "0 10px 25px rgba(234, 179, 8, 0.3)" }}
             whileTap={{ scale: 0.9 }}
           >
-            <ChevronRight className="h-6 w-6" />
+            <ChevronRight className="h-5 md:h-6 w-5 md:w-6" />
           </motion.button>
         </div>
       </div>
 
-      {/* Enhanced Floating Checkout Button */}
+      {/* Checkout Button */}
       <motion.div
-        className="fixed bottom-8 left-8 z-40"
+        className="fixed bottom-4 left-4 md:bottom-8 md:left-8 z-40"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ delay: 1, type: "spring", stiffness: 200 }}
@@ -344,10 +345,10 @@ export default function SimpleBurgerSlider() {
           whileTap={{ scale: 0.95 }}
         >
           <Button
-            className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-600 font-black px-6 py-4 rounded-2xl shadow-2xl border-2 border-black/20 transition-all duration-300"
+            className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-600 font-black px-4 md:px-6 py-3 md:py-4 rounded-xl md:rounded-2xl shadow-2xl border-2 border-black/20 transition-all duration-300 text-sm md:text-base"
             onClick={() => navigate("/checkout")}
           >
-            <Sparkles className="h-5 w-5 mr-2" />
+            <Sparkles className="h-4 w-4 md:h-5 md:w-5 mr-2" />
             Checkout - $
             {cart
               .reduce(
@@ -360,134 +361,77 @@ export default function SimpleBurgerSlider() {
         </motion.div>
       </motion.div>
 
-      {/* Enhanced Sidebar */}
+      {/* Sidebar */}
       <AnimatePresence>
         {isSidebarOpen && selectedBurger && (
           <motion.div
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50"
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex justify-end"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setIsSidebarOpen(false)}
           >
             <motion.div
-              className="absolute right-0 top-0 h-full w-full sm:w-[600px] bg-gray-900/95 backdrop-blur-xl border-l border-yellow-400/20 shadow-2xl overflow-y-auto"
+              className="w-full max-w-xs md:max-w-md bg-gray-900 p-5 md:p-8 rounded-l-2xl shadow-2xl relative overflow-y-auto"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              onClick={(e: React.MouseEvent) => e.stopPropagation()}
+              transition={{ type: "spring", stiffness: 100 }}
             >
-              {/* Enhanced Header */}
-              <div className="relative p-8 bg-gradient-to-r from-gray-900 to-black border-b border-yellow-400/20">
-                <motion.button
-                  className="absolute top-6 right-6 p-3 rounded-full bg-yellow-400/10 hover:bg-yellow-400/20 text-yellow-400 transition-all duration-300"
-                  onClick={() => setIsSidebarOpen(false)}
-                  whileHover={{ scale: 1.1, rotate: 90 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <X className="h-6 w-6" />
-                </motion.button>
+              <button
+                className="absolute top-3 right-3 p-2 bg-gray-800 rounded-full text-yellow-400 hover:bg-gray-700 transition-colors"
+                onClick={() => setIsSidebarOpen(false)}
+              >
+                <X className="h-4 w-4" />
+              </button>
 
-                <div className="text-center">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200 }}
-                  >
-                    <Sparkles className="h-8 w-8 text-yellow-400 mx-auto mb-4" />
-                  </motion.div>
-                  <h2 className="text-3xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
-                    {selectedBurger.name}
-                  </h2>
-                  <p className="text-gray-400 text-sm mt-2">Customize Your Perfect Order</p>
-                </div>
-              </div>
+              <div className="space-y-4 md:space-y-6">
+                <img
+                  src={selectedBurger.image}
+                  alt={selectedBurger.name}
+                  className="w-full h-40 md:h-56 object-cover rounded-xl"
+                />
+                <h3 className="text-xl md:text-2xl font-bold text-yellow-400">{selectedBurger.name}</h3>
+                <p className="text-gray-300 text-sm md:text-base">{selectedBurger.description}</p>
 
-              <div className="p-8 space-y-8">
-                {/* Enhanced Image */}
-                <motion.div
-                  className="relative rounded-2xl overflow-hidden shadow-2xl"
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                >
-                  <img
-                    src={selectedBurger.image || "/placeholder.svg"}
-                    alt={selectedBurger.name}
-                    className="w-full h-64 object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                  <div className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full">
-                    <div className="flex items-center gap-2">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                      <span className="text-white font-bold text-sm ml-1">{selectedBurger.rating}</span>
-                    </div>
-                  </div>
-                </motion.div>
-
-                {/* Enhanced Form */}
-                <div className="space-y-6">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                  >
-                    <label className="block text-yellow-400 font-semibold mb-3 flex items-center gap-2">
-                      <Sparkles className="h-4 w-4" />
-                      Choose Your Drink
-                    </label>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block text-sm md:text-base text-gray-200 mb-1">Choose a Drink:</label>
                     <select
+                      className="w-full px-3 py-2 bg-gray-800 text-gray-100 rounded-lg border border-yellow-400/30"
                       value={drinkOption}
                       onChange={(e) => setDrinkOption(e.target.value)}
-                      className="w-full p-4 rounded-xl bg-gray-800 border border-yellow-400/30 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400/50 focus:border-yellow-400 transition-all shadow-lg"
                     >
-                      <option value="cola">🥤 Cola ($2.50)</option>
-                      <option value="lemonade">🍋 Lemonade ($2.00)</option>
-                      <option value="water">💧 Water ($1.50)</option>
-                      <option value="none">❌ None</option>
+                      <option value="cola">Cola (+$2.5)</option>
+                      <option value="lemonade">Lemonade (+$2)</option>
+                      <option value="water">Water (+$1.5)</option>
+                      <option value="none">No Drink</option>
                     </select>
-                  </motion.div>
+                  </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 }}
-                  >
-                    <label className="flex items-center gap-4 p-4 bg-gray-800/50 rounded-xl border border-yellow-400/20 hover:border-yellow-400/40 transition-all cursor-pointer group">
-                      <input
-                        type="checkbox"
-                        checked={extraCheese}
-                        onChange={(e) => setExtraCheese(e.target.checked)}
-                        className="w-5 h-5 rounded border-2 border-yellow-400/50 text-yellow-400 focus:ring-yellow-400/20 bg-gray-700"
-                      />
-                      <div className="flex-1">
-                        <span className="text-yellow-400 font-semibold group-hover:text-yellow-300 transition-colors">
-                          🧀 Extra Cheese
-                        </span>
-                        <span className="block text-gray-400 text-sm">Add premium cheese (+$1.00)</span>
-                      </div>
+                  <div className="flex items-center space-x-2">
+                    <input
+                      id="extraCheese"
+                      type="checkbox"
+                      className="w-4 h-4"
+                      checked={extraCheese}
+                      onChange={(e) => setExtraCheese(e.target.checked)}
+                    />
+                    <label htmlFor="extraCheese" className="text-sm md:text-base text-gray-200">
+                      Extra Cheese (+$1)
                     </label>
-                  </motion.div>
+                  </div>
+                </div>
 
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
+                <div className="flex justify-between items-center">
+                  <span className="text-lg md:text-xl font-bold text-yellow-400">
+                    ${calculatePrice(selectedBurger.price, extraCheese, drinkOption)}
+                  </span>
+                  <Button
+                    className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-3 py-2 md:px-5 md:py-3 rounded-lg shadow-lg hover:from-yellow-500 hover:to-yellow-600"
+                    onClick={() => handleAddToCart(selectedBurger)}
                   >
-                    <Button
-                      className="w-full bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-yellow-600 font-black py-6 rounded-2xl shadow-2xl border-2 border-black/20 transition-all duration-300 text-lg"
-                      onClick={() => handleAddToCart(selectedBurger)}
-                    >
-                      <Sparkles className="h-5 w-5 mr-3" />
-                      Add to Cart - ${calculatePrice(selectedBurger.price, extraCheese, drinkOption)}
-                      <Sparkles className="h-5 w-5 ml-3" />
-                    </Button>
-                  </motion.div>
+                    Add to Cart
+                  </Button>
                 </div>
               </div>
             </motion.div>
