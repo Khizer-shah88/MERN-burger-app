@@ -14,8 +14,19 @@ const PORT = process.env.PORT || 5001;
 // Middleware for JSON parsing
 app.use(express.json());
 // CORS configuration with dynamic frontend URL or fallback
+const allowedOrigins = [
+    'http://localhost:5173', // Local dev
+    'https://mern-burger-app-1.onrender.com', // Deployed frontend
+];
 app.use(cors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        }
+        else {
+            callback(new Error('CORS not allowed for this origin'));
+        }
+    },
     credentials: true,
 }));
 // Fix for __dirname in ES module scope
