@@ -12,7 +12,7 @@ dotenv.config();
 
 // Initialize Express app
 const app = express();
-const PORT = process.env.PORT || 5001;
+const PORT = Number(process.env.PORT) || 5000; // standardize to 5000
 
 // Middleware for JSON parsing
 app.use(express.json());
@@ -44,8 +44,8 @@ const __dirname = path.dirname(__filename);
 app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 // Health check endpoint for Render
-app.get('/health', (req: Request, res: Response) => {
-  res.status(200).json({ status: 'Server is up and running' });
+app.get('/health', (_req: Request, res: Response) => {
+  res.status(200).json({ status: 'OK' });
 });
 
 // Routes
@@ -54,21 +54,22 @@ app.use('/api', authRoutes);
 app.use('/api', orderRoutes);
 
 // Error handling middleware
-app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
   console.error(err.stack);
-  res.status(500).json({ error: 'Something broke!' });
+  res.status(500).json({ error: 'Internal Server Error' });
 });
 
 // Connect to MongoDB and start server
 connectDB()
   .then(() => {
-    console.log('Connected to MongoDB');
-    app.listen(PORT, () => {
-      console.log(`Server running on http://localhost:${PORT}`);
+    console.log('MongoDB connected');
+
+    app.listen(PORT, '0.0.0.0', () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
-  .catch((error) => {
-    console.error('Failed to connect to MongoDB:', error);
+  .catch((err) => {
+    console.error('MongoDB connection failed:', err);
     process.exit(1);
   });
 

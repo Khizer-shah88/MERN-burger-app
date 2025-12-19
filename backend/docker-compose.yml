@@ -1,0 +1,35 @@
+version: "3.9"
+
+services:
+  backend:
+    image: docker-backend   # Use pre-built image (production-ready)
+    container_name: burger-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env              # Load all environment variables from .env
+    depends_on:
+      - mongodb
+    restart: unless-stopped
+    networks:
+      - burger-net
+
+  mongodb:
+    image: mongo:7-jammy
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=burger-app
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+    networks:
+      - burger-net
+
+networks:
+  burger-net:
+    driver: bridge
+
+volumes:
+  mongodb_data:
