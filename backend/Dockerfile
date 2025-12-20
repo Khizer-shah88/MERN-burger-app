@@ -17,7 +17,7 @@ COPY src/ ./src/
 COPY types/ ./types/
 RUN npm run build
 
-# Production stage
+# Production 
 FROM base AS production
 WORKDIR /app
 
