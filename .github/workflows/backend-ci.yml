@@ -2,21 +2,20 @@ name: Backend CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main ]
     paths:
       - 'backend/**'
       - '.github/workflows/backend-ci.yml'
+
   pull_request:
-    branches: [ main, develop ]
+    branches: [ main ]
     paths:
       - 'backend/**'
-      - '.github/workflows/backend-ci.yml'
 
 jobs:
   test:
     name: Test & Build
     runs-on: ubuntu-latest
-
     defaults:
       run:
         working-directory: backend
@@ -26,88 +25,74 @@ jobs:
         node-version: [18.x, 20.x]
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
           cache: npm
           cache-dependency-path: backend/package-lock.json
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: TypeScript build
-        run: npm run build
+      - run: npm ci
+      - run: npm run build
 
       - name: Security audit
         run: npm audit --audit-level=moderate
         continue-on-error: true
 
   docker:
-    name: Build Docker Image
+    name: Docker Build & Push
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Check Docker Hub credentials availability
-        id: dockerhub-check
-        run: |
-          if [ -n "${{ secrets.DOCKERHUB_USERNAME }}" ] && [ -n "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
-            echo "available=true" >> $GITHUB_OUTPUT
-          else
-            echo "available=false" >> $GITHUB_OUTPUT
-          fi
-
+      # ✅ LOGIN ONLY ON PUSH TO MAIN
       - name: Login to Docker Hub
-        if: steps.dockerhub-check.outputs.available == 'true'
+        if: github.event_name == 'push'
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build Docker image (without push)
-        if: steps.dockerhub-check.outputs.available == 'false' || github.event_name == 'pull_request'
+      # PR = build only
+      - name: Build Docker image (PR)
+        if: github.event_name == 'pull_request'
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           file: ./backend/Dockerfile
           push: false
           tags: burger-backend:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
 
-      - name: Build and push to Docker Hub
-        if: steps.dockerhub-check.outputs.available == 'true' && github.event_name != 'pull_request'
+      # MAIN = build + push
+      - name: Build & Push Docker image
+        if: github.event_name == 'push'
         uses: docker/build-push-action@v5
         with:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/burger-backend:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/burger-backend:${{ github.sha }}
+            khizershah11/burger-backend:latest
+            khizershah11/burger-backend:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
   security:
-    name: Security Scan
+    name: Trivy Scan
     runs-on: ubuntu-latest
     needs: test
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Run Trivy scan
+      - name: Run Trivy
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: fs
