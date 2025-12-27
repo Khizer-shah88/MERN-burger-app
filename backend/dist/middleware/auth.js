@@ -4,7 +4,12 @@ export const authenticateToken = (req, res, next) => {
     if (!token)
         return res.status(401).json({ error: 'Authentication token required' });
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'b6f9c7a2e4d5b8f1a3c9e7d2b4f6a8e0');
+        const secret = process.env.JWT_SECRET;
+        if (!secret) {
+            console.error('JWT_SECRET environment variable is not set.');
+            return res.status(500).json({ error: 'Server configuration error' });
+        }
+        const decoded = jwt.verify(token, secret);
         req.user = decoded; // Attach user to request object
         next();
     }
