@@ -77,7 +77,6 @@ jobs:
           file: ./backend/Dockerfile
           push: false
           tags: burger-backend:test
-            if: ${{ secrets.DOCKERHUB_USERNAME && secrets.DOCKERHUB_TOKEN }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
