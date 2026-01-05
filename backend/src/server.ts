@@ -20,18 +20,24 @@ app.use(express.json());
 // CORS configuration with dynamic frontend URL or fallback
 const allowedOrigins = [
   'http://localhost:5173', // Local dev
-  'https://burgerbite.duckdns.org/api', // Deployed frontend
+  'http://burgerbite.duckdns.org', // Deployed frontend
+  'https://burgerbite.duckdns.org', // Deployed frontend (HTTPS)
 ];
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
       callback(new Error('CORS not allowed for this origin'));
     }
   },
   credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 }));
 
 
