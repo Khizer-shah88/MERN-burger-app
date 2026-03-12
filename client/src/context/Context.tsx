@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode, useCallback, useMemo } from "react";
 
 interface Burger {
   _id: string;
@@ -44,19 +44,16 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const savedCart = localStorage.getItem("cart");
     if (savedCart) {
-      console.log("Loaded cart from localStorage:", savedCart);
       setCart(JSON.parse(savedCart));
     }
   }, []);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
-    console.log("Saving cart to localStorage:", cart);
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (item: Burger) => {
-    console.log("Adding to cart:", item);
+  const addToCart = useCallback((item: Burger) => {
     setCart((prev) => {
       const existingItem = prev.find(
         (i) =>
@@ -75,10 +72,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return [...prev, { ...item, quantity: item.quantity || 1 }];
     });
-  };
+  }, []);
 
-  const removeFromCart = (id: string, drink?: string, extraCheese?: boolean) => {
-    console.log("Removing from cart, id:", id, "drink:", drink, "extraCheese:", extraCheese);
+  const removeFromCart = useCallback((id: string, drink?: string, extraCheese?: boolean) => {
     setCart((prev) => {
       const itemToRemove = prev.find(
         (i) => i._id === id && i.drink === drink && i.extraCheese === extraCheese
@@ -97,15 +93,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return prev; // No change if item not found
     });
-  };
+  }, []);
 
-  const clearCart = () => {
-    console.log("Clearing cart");
+  const clearCart = useCallback(() => {
     setCart([]);
-  };
+  }, []);
 
-  const updateQuantity = (id: string, quantity: number, drink?: string, extraCheese?: boolean) => {
-    console.log("Updating quantity for id:", id, "to:", quantity, "drink:", drink, "extraCheese:", extraCheese);
+  const updateQuantity = useCallback((id: string, quantity: number, drink?: string, extraCheese?: boolean) => {
     setCart((prev) => {
       const existingItem = prev.find(
         (i) => i._id === id && i.drink === drink && i.extraCheese === extraCheese
@@ -129,10 +123,15 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       }
       return prev;
     });
-  };
+  }, []);
+
+  const value = useMemo(
+    () => ({ cart, addToCart, removeFromCart, clearCart, updateQuantity }),
+    [cart, addToCart, removeFromCart, clearCart, updateQuantity]
+  );
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, updateQuantity }}>
+    <CartContext.Provider value={value}>
       {children}
     </CartContext.Provider>
   );

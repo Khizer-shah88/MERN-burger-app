@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import axiosInstance from '@/api/axiosInstance';
 
 // Updated Restaurant interface to match backend response
 interface Restaurant {
@@ -23,11 +24,8 @@ export default function Order() {
   useEffect(() => {
     const fetchRestaurant = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/restaurants/${restaurantId}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch restaurant: ' + response.statusText);
-        }
-        const data = await response.json();
+        const response = await axiosInstance.get(`/restaurants/${restaurantId}`);
+        const data = response.data;
         setRestaurant(data);
         setLoading(false);
       } catch (err: any) {
@@ -56,23 +54,22 @@ export default function Order() {
         return;
       }
 
-      const response = await fetch('http://localhost:5001/api/orders', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
+      const response = await axiosInstance.post('/orders', {
           restaurantId: restaurant._id,
           quantity: quantity,
-        }),
-      });
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error('Failed to place order: ' + response.statusText);
+      const data = response.data;
+
+      if (!data?.order?._id) {
+        throw new Error('Failed to place order');
       }
 
-      const data = await response.json();
       alert(`Order placed successfully! Order ID: ${data.order._id}`);
       navigate('/'); // Redirect to landing page after success
     } catch (err: any) {

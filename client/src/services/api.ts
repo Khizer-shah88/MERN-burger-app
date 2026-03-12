@@ -1,11 +1,4 @@
-import axios from 'axios';
-
-const API_URL = import.meta.env.VITE_API_URL || '/api';
-
-const api = axios.create({
-  baseURL: API_URL,
-  headers: { 'Content-Type': 'application/json' },
-});
+import axiosInstance from '@/api/axiosInstance';
 
 export const placeOrder = async (order: {
   restaurantId: string;
@@ -15,16 +8,16 @@ export const placeOrder = async (order: {
   name: string;
   phoneNumber: string;
 }) => {
-  const response = await api.post('/orders', order);
+  const response = await axiosInstance.post('/orders', order);
   return response.data;
 };
 
 export const getAllOrders = async () => {
-  const response = await api.get('/orders');
+  const response = await axiosInstance.get('/orders');
   return response.data;
 };
 
 export const updateOrderStatus = async (orderId: string, status: string) => {
-  const response = await api.patch(`/orders/${orderId}/status`, { orderId, status });
+  const response = await axiosInstance.patch(`/orders/${orderId}/status`, { orderId, status });
   return response.data;
 };

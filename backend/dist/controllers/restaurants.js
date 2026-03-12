@@ -1,4 +1,5 @@
 import Restaurant from '../models/Restaurant.js';
+const DEFAULT_BURGER_IMAGE = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&h=300&auto=format&fit=crop&ixlib=rb-4.0.3';
 // Add a new restaurant (single restaurant with default image)
 export const addRestaurant = async (req, res) => {
     try {
@@ -7,14 +8,16 @@ export const addRestaurant = async (req, res) => {
         if (!name || !description || !price) {
             return res.status(400).json({ error: 'Name, description, and price are required' });
         }
-        // Use a default image URL (Unsplash) since no upload is needed
-        const image = 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&h=300&auto=format&fit=crop&ixlib=rb-4.0.3'; // Default burger image
+        const normalizedPrice = Number(price);
+        if (!Number.isFinite(normalizedPrice) || normalizedPrice <= 0) {
+            return res.status(400).json({ error: 'Price must be a valid positive number' });
+        }
         const newRestaurant = new Restaurant({
             name,
             description,
-            price: parseFloat(price), // Ensure price is a number
-            image,
-            popular: popular || false, // Default to false if not provided
+            price: normalizedPrice,
+            image: DEFAULT_BURGER_IMAGE,
+            popular: Boolean(popular),
         });
         const savedRestaurant = await newRestaurant.save();
         res.status(201).json(savedRestaurant);
@@ -27,8 +30,11 @@ export const addRestaurant = async (req, res) => {
 // Get all restaurants
 export const getRestaurants = async (req, res) => {
     try {
-        const restaurants = await Restaurant.find(); // Fetch all restaurants
-        res.status(200).json(restaurants); // Return the array of restaurants
+        const restaurants = await Restaurant.find()
+            .sort({ popular: -1, name: 1 })
+            .lean();
+        res.set('Cache-Control', 'public, max-age=60');
+        res.status(200).json(restaurants);
     }
     catch (err) {
         console.error('Error fetching restaurants:', err);
@@ -44,7 +50,7 @@ export const createInitialRestaurants = async (req, res) => {
                 name: 'Classic Cheese',
                 description: 'Beef patty, cheddar cheese, lettuce, tomato, onion, special sauce',
                 price: 12.99, // Price as a number
-                image: 'https://images.unsplash.com/photo-1568901346375-23c9450c58cd?q=80&w=400&h=300&auto=format&fit=crop&ixlib=rb-4.0.3',
+                image: DEFAULT_BURGER_IMAGE,
                 popular: false,
             },
             {

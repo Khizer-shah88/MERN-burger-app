@@ -1,60 +1,27 @@
 import { Request, Response } from 'express';
-import mongoose from 'mongoose';
-import Order, { IOrder } from '../models/Order.js';
-import Restaurant, { IRestaurant } from '../models/Restaurant.js';
+import Order from '../models/Order.js';
+import Restaurant from '../models/Restaurant.js';
+
+const DRINK_PRICE_MAP: Record<string, number> = {
+  cola: 2.5,
+  lemonade: 2,
+  water: 1.5,
+};
+
+const getAddonsCost = (drink?: string, extraCheese?: boolean): number => {
+  const drinkCost = drink ? DRINK_PRICE_MAP[drink] ?? 0 : 0;
+  return drinkCost + (extraCheese ? 1 : 0);
+};
 
 export const getAllOrders = async (req: Request, res: Response) => {
   try {
-    console.log('Step 1: Starting to fetch all orders...');
-
-    const rawOrders = await Order.find().sort({ createdAt: -1 });
-    console.log('Step 2: Raw orders fetched:', JSON.stringify(rawOrders, null, 2));
-
-    const restaurantCount = await Restaurant.countDocuments();
-    console.log('Step 3: Number of restaurants in collection:', restaurantCount);
-
-    const orders: IOrder[] = await Order.find()
-      .populate({
-        path: 'items.restaurantId',
-        select: 'name price image',
-        model: 'Restaurant',
-        options: { strictPopulate: false },
-      })
-      .sort({ createdAt: -1 })
-      .catch((err: { message: any; }) => {
-        console.warn('Populate failed, using raw orders:', err.message);
-        return rawOrders;
-      });
-
-    console.log('Step 4: Orders after populate attempt:', JSON.stringify(orders, null, 2));
-
-    const sanitizedOrders = orders.map(order => {
-      const sanitizedItems = order.items.map(item => {
-        if (!mongoose.Types.ObjectId.isValid(item.restaurantId)) {
-          console.warn(`Invalid restaurantId found: ${item.restaurantId}`);
-          return {
-            ...item,
-            restaurantId: null,
-            name: item.name || 'Unknown Item',
-            price: item.price || 0,
-          };
-        }
-        return item;
-      });
-      return { ...order.toObject(), items: sanitizedItems };
-    });
-
-    console.log('Step 5: Final sanitized orders:', JSON.stringify(sanitizedOrders, null, 2));
-
-    res.status(200).json(sanitizedOrders.length > 0 ? sanitizedOrders : []);
+    const orders = await Order.find().sort({ createdAt: -1 }).lean();
+    res.set('Cache-Control', 'no-store');
+    res.status(200).json(orders);
   } catch (err) {
-    console.error('Critical error in getAllOrders:', {
-      message: (err as Error).message,
-      stack: (err as Error).stack,
-    });
+    console.error('Error in getAllOrders:', (err as Error).message);
     res.status(500).json({
       error: 'Internal server error',
-      details: (err as Error).message,
     });
   }
 };
@@ -62,8 +29,6 @@ export const getAllOrders = async (req: Request, res: Response) => {
 export const placeOrder = async (req: Request, res: Response) => {
   try {
     const { name, phoneNumber, items, deliveryOption, address } = req.body;
-
-    console.log('Received order payload:', JSON.stringify(req.body, null, 2)); // Debug log
 
     // Validate required fields
     if (!name || !phoneNumber || !items || !deliveryOption) {
@@ -78,27 +43,50 @@ export const placeOrder = async (req: Request, res: Response) => {
       return res.status(400).json({ error: 'Address is required for delivery' });
     }
 
+    type IncomingOrderItem = {
+      restaurantId: string;
+      quantity: number;
+      drink?: string;
+      extraCheese?: boolean;
+      name?: string;
+      price?: number;
+      isDeal?: boolean;
+    };
+
+    const incomingItems = items as IncomingOrderItem[];
+
+    const restaurantIds = Array.from(
+      new Set(
+        incomingItems
+          .filter((item) => !item.isDeal)
+          .map((item) => String(item.restaurantId))
+      )
+    );
+
+    const restaurants = await Restaurant.find({ _id: { $in: restaurantIds } })
+      .select('name price')
+      .lean();
+
+    const restaurantMap = new Map(
+      restaurants.map((restaurant) => [String(restaurant._id), restaurant])
+    );
+
     let total = 0;
-    for (const item of items) {
-      console.log('Processing item:', JSON.stringify(item, null, 2)); // Debug log
+    for (const item of incomingItems) {
       if (!item.restaurantId || !item.quantity || item.quantity < 1) {
         return res.status(400).json({ error: 'Each item must have a valid restaurantId and quantity' });
       }
 
       let itemPrice = item.price || 0;
       let itemName = item.name || 'Unknown Item';
+      const addonsCost = getAddonsCost(item.drink, item.extraCheese);
 
       if (!item.isDeal) {
-        // Validate restaurant items
-        if (!mongoose.Types.ObjectId.isValid(item.restaurantId)) {
-          return res.status(400).json({ error: `Invalid restaurantId: ${item.restaurantId}` });
-        }
-        const restaurant = await Restaurant.findById(item.restaurantId) as IRestaurant | null;
+        const restaurant = restaurantMap.get(String(item.restaurantId));
         if (!restaurant) {
           return res.status(404).json({ error: `Restaurant not found for ID: ${item.restaurantId}` });
         }
-        itemPrice = restaurant.price + (item.extraCheese ? 1 : 0) +
-          (item.drink === 'cola' ? 2.5 : item.drink === 'lemonade' ? 2 : item.drink === 'water' ? 1.5 : 0);
+        itemPrice = restaurant.price + addonsCost;
         itemName = restaurant.name;
         item.name = restaurant.name;
         item.price = restaurant.price;
@@ -107,17 +95,16 @@ export const placeOrder = async (req: Request, res: Response) => {
         if (!item.price || !item.name) {
           return res.status(400).json({ error: 'Deal items must include price and name' });
         }
-        itemPrice = item.price + (item.extraCheese ? 1 : 0) +
-          (item.drink === 'cola' ? 2.5 : item.drink === 'lemonade' ? 2 : item.drink === 'water' ? 1.5 : 0);
+        itemPrice = item.price + addonsCost;
       }
 
       total += itemPrice * item.quantity;
     }
 
-    const order: IOrder = new Order({
+    const order = new Order({
       name,
       phoneNumber,
-      items,
+      items: incomingItems,
       total,
       status: 'pending',
       paymentMethod: 'cash on delivery',
@@ -126,29 +113,26 @@ export const placeOrder = async (req: Request, res: Response) => {
     });
 
     const savedOrder = await order.save();
-    console.log('Order saved:', JSON.stringify(savedOrder, null, 2)); // Debug log
     res.status(201).json({
       message: 'Order placed successfully',
       order: savedOrder,
     });
   } catch (err) {
-    console.error('Error placing order:', {
-      message: (err as Error).message,
-      stack: (err as Error).stack,
-    });
+    console.error('Error placing order:', (err as Error).message);
     res.status(500).json({ error: 'Internal server error: ' + (err as Error).message });
   }
 };
 
 export const updateOrderStatus = async (req: Request, res: Response) => {
   try {
-    const { orderId, status } = req.body;
+    const { status } = req.body;
+    const orderId = req.params.id || req.body.orderId;
 
     if (!orderId || !status) {
       return res.status(400).json({ error: 'Order ID and status are required' });
     }
 
-    const order = await Order.findById(orderId) as IOrder | null;
+    const order = await Order.findById(orderId);
     if (!order) {
       return res.status(404).json({ error: 'Order not found' });
     }

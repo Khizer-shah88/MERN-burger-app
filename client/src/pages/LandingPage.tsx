@@ -15,6 +15,7 @@ import Offers from "@/components/Offers"
 import AppLoad from "@/components/AppLoad"
 import Footer from "@/components/Footer"
 import { CartContext } from "@/context/Context"
+import axiosInstance from "@/api/axiosInstance"
 
 interface Restaurant {
   _id: string
@@ -69,38 +70,46 @@ export default function Landing() {
   // Fetch restaurants from backend
  // In LandingPage.tsx, inside the component
 useEffect(() => {
+    let isMounted = true;
+
     const fetchRestaurants = async () => {
       try {
-        console.log('Fetching restaurants from https://mern-burger-app.onrender.com/api/restaurants');
-        const response = await fetch("https://mern-burger-app.onrender.com/api/restaurants", {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}, ${response.statusText}`);
-        }
-        const data = await response.json();
-        console.log('Raw fetched data:', JSON.stringify(data, null, 2));
+        const response = await axiosInstance.get("/restaurants");
+        const data = response.data;
+
         if (!Array.isArray(data)) {
           throw new Error('Response is not an array');
         }
+
         const normalizedData = data.map((item: any) => ({
           ...item,
           _id: item._id.toString(),
           popular: item.popular ?? false,
           price: Number(item.price),
         }));
-        console.log("Normalized fetched restaurants:", JSON.stringify(normalizedData, null, 2));
+
+        if (!isMounted) {
+          return;
+        }
+
         setRestaurants(normalizedData);
         setLoading(false);
       } catch (err: any) {
-        console.error('Fetch error:', err.message);
+        if (!isMounted) {
+          return;
+        }
+
         setError(`Failed to fetch restaurants: ${err.message}`);
         setLoading(false);
-        setRestaurants([]); // Avoid outdated fallback data
+        setRestaurants([]);
       }
     };
+
     fetchRestaurants();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   
@@ -117,7 +126,6 @@ useEffect(() => {
 
   // Handle adding burger to cart
   const handleAddToCart = (burger: Restaurant) => {
-    console.log("Selected burger before adding to cart:", burger);
     const cartItem: Restaurant = {
       ...burger,
       _id: burger._id,
@@ -126,7 +134,6 @@ useEffect(() => {
       quantity: 1,
       isDeal: false,
     };
-    console.log("Adding to cart:", cartItem);
     addToCart(cartItem);
     setIsSidebarOpen(false);
     resetForm();
@@ -200,7 +207,6 @@ useEffect(() => {
           <PopularBurger
             restaurants={restaurants}
             setSelectedBurger={(burger) => {
-              console.log("Setting selected burger:", burger);
               setSelectedBurger(burger);
             }}
             setIsSidebarOpen={setIsSidebarOpen}

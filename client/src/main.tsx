@@ -4,26 +4,24 @@ import { HeroUIProvider } from '@heroui/react';
 import App from './App';
 import './index.css';
 import { NextUIProvider } from '@nextui-org/system';
-import Loader from './components/Loader';
 
 const Root = () => {
-  const [loading, setLoading] = useState(true);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    // Simulate initial load (adjust time or replace with API call)
-    const timer = setTimeout(() => setLoading(false), 2000); // 2 seconds
-    return () => clearTimeout(timer);
+    setIsMounted(true);
   }, []);
 
+  if (!isMounted) {
+    return null;
+  }
+
   return (
-    <>
-      {loading && <Loader />}
-      <HeroUIProvider>
-        <NextUIProvider>
-          <App />
-        </NextUIProvider>
-      </HeroUIProvider>
-    </>
+    <HeroUIProvider>
+      <NextUIProvider>
+        <App />
+      </NextUIProvider>
+    </HeroUIProvider>
   );
 };
 

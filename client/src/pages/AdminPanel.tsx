@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { UtensilsCrossed, RefreshCw } from 'lucide-react';
+import axiosInstance from '@/api/axiosInstance';
 
 interface Order {
   _id: string;
@@ -30,13 +31,9 @@ export default function AdminPanel() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch('http://localhost:5001/api/orders');
-      if (!response.ok) {
-        // Handle HTTP errors (e.g., 500, 404)
-        const errorData = await response.json(); // Parse the error response from the server
-        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
-      }
-      const data = await response.json();
+      const response = await axiosInstance.get('/orders');
+      const data = response.data;
+
       if (Array.isArray(data)) {
         setOrders(data);
       } else {
