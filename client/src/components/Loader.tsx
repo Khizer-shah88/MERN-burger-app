@@ -1,79 +1,60 @@
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Loader = () => {
-  const containerVariants = {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: 1,
-      transition: { duration: 0.5, ease: 'easeInOut' },
-    },
-    exit: { opacity: 0, transition: { duration: 0.5, ease: 'easeInOut' } },
-  };
-
-  const layerVariants = (delay: number) => ({
-    animate: {
-      rotate: [0, 360],
-      transition: {
-        duration: 2.5,
-        repeat: Infinity,
-        ease: 'linear',
-        delay,
-      },
-    },
-  });
+  const layers = [
+    { label: 'top-bun',    bg: 'bg-yellow-600',  h: 'h-10', w: 'w-36', rounded: 'rounded-t-3xl', top: 0 },
+    { label: 'cheese',     bg: 'bg-yellow-300',  h: 'h-3',  w: 'w-32', rounded: 'rounded-sm',    top: 40 },
+    { label: 'patty',      bg: 'bg-amber-800',   h: 'h-6',  w: 'w-30', rounded: 'rounded-lg',    top: 43 },
+    { label: 'tomato',     bg: 'bg-red-500',     h: 'h-3',  w: 'w-28', rounded: 'rounded-sm',    top: 49 },
+    { label: 'lettuce',    bg: 'bg-green-500',   h: 'h-3',  w: 'w-26', rounded: 'rounded-sm',    top: 52 },
+    { label: 'bottom-bun', bg: 'bg-yellow-600',  h: 'h-10', w: 'w-36', rounded: 'rounded-b-3xl', top: 55 },
+  ];
 
   return (
     <motion.div
-      className="fixed inset-0 flex items-center justify-center bg-black z-50"
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-      exit="exit"
+      className="fixed inset-0 flex flex-col items-center justify-center bg-black z-50 gap-6"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.4 }}
     >
-      <div className="relative w-40 h-40">
-        {/* Top Bun */}
-        <motion.div
-          className="absolute w-40 h-14 bg-yellow-600 rounded-t-2xl shadow-lg"
-          variants={layerVariants(0)}
-          animate="animate"
-          style={{ top: 0 }}
-        />
-        {/* Cheese */}
-        <motion.div
-          className="absolute w-36 h-4 bg-yellow-300 rounded-lg shadow-md"
-          variants={layerVariants(0.2)}
-          animate="animate"
-          style={{ top: '56px', left: '2px' }}
-        />
-        {/* Patty */}
-        <motion.div
-          className="absolute w-34 h-8 bg-amber-800 rounded-lg shadow-md"
-          variants={layerVariants(0.4)}
-          animate="animate"
-          style={{ top: '64px', left: '3px' }}
-        />
-        {/* Tomato */}
-        <motion.div
-          className="absolute w-32 h-4 bg-red-500 rounded-lg shadow-md"
-          variants={layerVariants(0.6)}
-          animate="animate"
-          style={{ top: '76px', left: '4px' }}
-        />
-        {/* Lettuce */}
-        <motion.div
-          className="absolute w-30 h-4 bg-green-500 rounded-lg shadow-md"
-          variants={layerVariants(0.8)}
-          animate="animate"
-          style={{ top: '84px', left: '5px' }}
-        />
-        {/* Bottom Bun */}
-        <motion.div
-          className="absolute w-40 h-14 bg-yellow-600 rounded-b-2xl shadow-lg"
-          variants={layerVariants(1.0)}
-          animate="animate"
-          style={{ bottom: 0 }}
-        />
+      {/* Animated burger */}
+      <div className="relative w-36 h-24">
+        {layers.map((layer, i) => (
+          <motion.div
+            key={layer.label}
+            className={`absolute ${layer.h} ${layer.w} ${layer.bg} ${layer.rounded} shadow-md mx-auto left-0 right-0`}
+            style={{ top: layer.top }}
+            animate={{
+              y: [0, -6, 0],
+              opacity: [0.85, 1, 0.85],
+            }}
+            transition={{
+              duration: 1.4,
+              repeat: Infinity,
+              ease: 'easeInOut',
+              delay: i * 0.1,
+            }}
+          />
+        ))}
       </div>
+
+      {/* Loading text */}
+      <motion.div
+        className="flex items-center gap-1"
+        animate={{ opacity: [0.4, 1, 0.4] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+      >
+        <span className="text-yellow-400 font-bold text-sm tracking-widest uppercase">Loading</span>
+        {[0, 1, 2].map((i) => (
+          <motion.span
+            key={i}
+            className="w-1 h-1 rounded-full bg-yellow-400 block"
+            animate={{ scale: [1, 1.8, 1], opacity: [0.3, 1, 0.3] }}
+            transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+          />
+        ))}
+      </motion.div>
     </motion.div>
   );
 };

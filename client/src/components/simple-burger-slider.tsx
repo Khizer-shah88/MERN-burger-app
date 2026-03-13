@@ -3,7 +3,7 @@
 import type React from "react"
 
 import { Swiper, SwiperSlide } from "swiper/react"
-import { Navigation, Autoplay, EffectCoverflow } from "swiper/modules"
+import { Navigation, Autoplay, EffectCoverflow, Pagination } from "swiper/modules"
 import { ChevronLeft, ChevronRight, Star, Clock, X, Sparkles, Heart, Zap } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 import { useState, useContext } from "react"
@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button"
 import "swiper/css"
 import "swiper/css/navigation"
 import "swiper/css/effect-coverflow"
+import "swiper/css/pagination"
 import { CartContext } from "@/context/Context"
 
 interface Burger {
@@ -124,9 +125,9 @@ export default function SimpleBurgerSlider() {
   }
 
   return (
-    <div className="relative min-h-screen bg-gradient-to-br rounded-4xl ml-12 mr-12 mt-14 from-gray-900 via-black to-gray-800 py-20 md:py-32 overflow-hidden">
+    <div className="relative bg-gradient-to-br rounded-2xl sm:rounded-4xl mx-3 sm:mx-8 md:mx-12 mt-6 sm:mt-10 md:mt-14 from-gray-900 via-black to-gray-800 py-10 sm:py-16 md:py-24">
       {/* Floating Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+      <div className="absolute inset-0 overflow-hidden rounded-2xl sm:rounded-4xl pointer-events-none">
         <motion.div
           className="absolute top-20 left-10 w-40 h-40 bg-gradient-to-r from-yellow-400 to-yellow-500 rounded-full opacity-5 blur-2xl"
           animate={{ y: [0, -30, 0], x: [0, 20, 0] }}
@@ -187,7 +188,7 @@ export default function SimpleBurgerSlider() {
         {/* Enhanced Slider */}
         <div className="relative group">
           <Swiper
-            modules={[Navigation, Autoplay, EffectCoverflow]}
+            modules={[Navigation, Autoplay, EffectCoverflow, Pagination]}
             effect="coverflow"
             coverflowEffect={{
               rotate: 0,
@@ -207,13 +208,16 @@ export default function SimpleBurgerSlider() {
             }}
             loop={true}
             centeredSlides={true}
+            pagination={{ clickable: true }}
             breakpoints={{
-              320: { slidesPerView: 1.2, spaceBetween: 20 },
-              480: { slidesPerView: 2, spaceBetween: 25 },
-              768: { slidesPerView: 3, spaceBetween: 30 },
-              1024: { slidesPerView: 4, spaceBetween: 35 },
+              320: { slidesPerView: 1.1, spaceBetween: 12 },
+              480: { slidesPerView: 1.8, spaceBetween: 16 },
+              640: { slidesPerView: 2.2, spaceBetween: 20 },
+              768: { slidesPerView: 3, spaceBetween: 24 },
+              1024: { slidesPerView: 3.5, spaceBetween: 28 },
+              1280: { slidesPerView: 4, spaceBetween: 32 },
             }}
-            className="static px-2 md:px-0 !overflow-visible"
+            className="static px-2 md:px-0 !overflow-visible pb-12"
           >
             {burgers.map((burger, index) => (
               <SwiperSlide key={burger._id}>
@@ -246,7 +250,7 @@ export default function SimpleBurgerSlider() {
 
                   <div className="relative rounded-3xl overflow-hidden shadow-2xl bg-gray-800/80 backdrop-blur-sm border border-yellow-400/20 hover:border-yellow-400/40 transition-all duration-500">
                     {/* Enhanced Image Container */}
-                    <div className="relative h-72 overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800">
+                    <div className="relative h-44 sm:h-56 md:h-64 lg:h-72 overflow-hidden bg-gradient-to-br from-gray-700 to-gray-800">
                       <img
                         src={burger.image || "/placeholder.svg"}
                         alt={burger.name}
@@ -282,9 +286,9 @@ export default function SimpleBurgerSlider() {
                     </div>
 
                     {/* Enhanced Content */}
-                    <div className="p-6 space-y-4">
+                    <div className="p-3 sm:p-5 md:p-6 space-y-3 md:space-y-4">
                       <div>
-                        <h3 className="text-xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent mb-2 group-hover:from-yellow-300 group-hover:to-yellow-400 transition-all duration-300">
+                        <h3 className="text-sm sm:text-base md:text-xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent mb-1 sm:mb-2 group-hover:from-yellow-300 group-hover:to-yellow-400 transition-all duration-300">
                           {burger.name}
                         </h3>
                         <p className="text-gray-300 text-sm leading-relaxed line-clamp-2 group-hover:text-gray-200 transition-colors">
@@ -293,11 +297,11 @@ export default function SimpleBurgerSlider() {
                       </div>
 
                       <div className="flex items-center justify-between">
-                        <span className="text-2xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+                        <span className="text-base sm:text-xl md:text-2xl font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
                           ${burger.price.toFixed(2)}
                         </span>
                         <motion.div
-                          className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-4 py-2 rounded-xl font-bold text-sm shadow-lg"
+                          className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black px-2 py-1.5 sm:px-4 sm:py-2 rounded-xl font-bold text-xs sm:text-sm shadow-lg"
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >

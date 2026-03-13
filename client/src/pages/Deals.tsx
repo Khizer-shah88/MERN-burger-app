@@ -102,28 +102,35 @@ const DealsPage: React.FC = () => {
   };
   return (
     <motion.div className="min-h-screen bg-gradient-to-b from-zinc-900 via-zinc-900 to-black text-white">
+      {/* Top accent */}
+      <div className="fixed top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-yellow-400/40 to-transparent z-50" />
+
       {/* Navbar */}
       <motion.nav
-        className="sticky top-0 z-50 bg-black/50 backdrop-blur-md border-b border-white/10 py-4"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
+        className="sticky top-0 z-40 bg-black/70 backdrop-blur-2xl border-b border-white/10 py-3"
+        initial={{ y: -60, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6, ease: 'easeOut' }}
       >
-        <div className="container mx-auto px-4 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <UtensilsCrossed className="h-6 w-6 text-yellow-500" />
-            <span className="text-xl font-bold">BurgerBite</span>
+        <div className="container mx-auto px-4 sm:px-6 flex items-center justify-between max-w-6xl">
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 p-2 rounded-xl shadow-lg group-hover:shadow-yellow-400/30 transition-all duration-300">
+              <UtensilsCrossed className="h-4 w-4 text-black" />
+            </div>
+            <span className="text-lg font-black bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">
+              BurgerBite
+            </span>
           </Link>
-          <div className="flex items-center gap-6">
-            <Link to="/menu" className="text-sm font-medium hover:text-yellow-500 transition-colors">
-              Menu
+          <div className="flex items-center gap-3 sm:gap-5">
+            <Link to="/" className="hidden sm:block text-sm font-medium text-gray-400 hover:text-yellow-400 transition-colors">
+              Home
             </Link>
-            <Link to="/offers" className="text-sm font-medium hover:text-yellow-500 transition-colors">
-              Offers
+            <Link to="/checkout" className="hidden sm:block text-sm font-medium text-gray-400 hover:text-yellow-400 transition-colors">
+              Checkout
             </Link>
-            <Button 
+            <Button
               onClick={() => navigate('/checkout')}
-              className="bg-yellow-500 text-black hover:bg-yellow-400 rounded-full px-4 py-2 flex items-center gap-2"
+              className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-orange-500 rounded-xl px-4 py-2 flex items-center gap-2 font-bold text-sm shadow-lg"
             >
               <ShoppingBag className="h-4 w-4" />
               Cart
@@ -134,20 +141,33 @@ const DealsPage: React.FC = () => {
 
       {/* Hero Section */}
       <motion.div
-        className="relative bg-gradient-to-b from-yellow-500/20 to-transparent py-16"
+        className="relative py-16 sm:py-20 overflow-hidden"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
-        <div className="container mx-auto px-4 text-center">
+        <div className="absolute inset-0 bg-gradient-to-b from-yellow-500/10 via-yellow-400/5 to-transparent pointer-events-none" />
+        <div className="absolute top-8 left-1/3 w-48 h-48 bg-yellow-400/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="container mx-auto px-4 text-center relative z-10 max-w-3xl">
+          <motion.span
+            className="inline-block bg-yellow-400/10 text-yellow-400 text-xs font-bold px-4 py-2 rounded-full border border-yellow-400/20 mb-4 tracking-widest uppercase"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+          >
+            Limited Time Offers
+          </motion.span>
           <motion.h1
-            className="text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-4"
+            className="text-4xl sm:text-5xl md:text-6xl font-black text-white mb-4 leading-tight"
             variants={slideIn}
           >
-            Today's Special <span className="text-yellow-500">Deals</span>
+            Today's Special{' '}
+            <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              Deals
+            </span>
           </motion.h1>
           <motion.p
-            className="text-lg text-gray-300 max-w-2xl mx-auto"
+            className="text-base sm:text-lg text-gray-400 max-w-xl mx-auto"
             variants={fadeIn}
           >
             Discover amazing savings on your favorite meals. Limited time offers you can't resist!
@@ -157,12 +177,12 @@ const DealsPage: React.FC = () => {
 
       {/* Deals Section */}
       <motion.section
-        className="container mx-auto px-4 py-12"
+        className="container mx-auto px-4 sm:px-6 pb-16 max-w-6xl"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {deals.map((deal, index) => (
             <motion.div
               key={deal.category}
@@ -170,64 +190,68 @@ const DealsPage: React.FC = () => {
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true }}
-              transition={{ delay: index * 0.2 }}
+              transition={{ delay: index * 0.15 }}
             >
-              <div className="bg-zinc-800/50 p-6 rounded-xl border border-white/10 hover:border-yellow-500/50 transition-all duration-300">
-                <h3 className="text-2xl font-bold text-yellow-500 mb-6">{deal.category}</h3>
-                <div className="space-y-6">
-                  {deal.items.map((item, i) => (
+              <div className="bg-zinc-900/60 backdrop-blur-sm p-6 rounded-2xl border border-white/10 hover:border-yellow-400/30 transition-all duration-300">
+                <h3 className="text-xl font-black text-yellow-400 mb-5 flex items-center gap-2">
+                  <span className="w-2 h-6 rounded-full bg-gradient-to-b from-yellow-400 to-orange-400" />
+                  {deal.category}
+                </h3>
+                <div className="space-y-5">
+                  {deal.items.map((item) => (
                     <motion.div
                       key={item.title}
-                      className="group relative flex flex-col gap-4 p-6 bg-zinc-700/20 rounded-lg hover:bg-zinc-700/30 transition-all duration-300"
-                      whileHover={{ scale: 1.02 }}
+                      className="group relative flex flex-col gap-4 p-5 bg-white/[0.03] rounded-xl border border-white/10 hover:border-yellow-400/30 transition-all duration-300"
+                      whileHover={{ scale: 1.01, y: -2 }}
                       transition={{ duration: 0.2 }}
                     >
                       {/* Tag */}
-                      <div className="absolute -top-2 -right-2 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full z-10 shadow-lg">
+                      <div className="absolute -top-2.5 -right-2.5 bg-gradient-to-r from-yellow-400 to-orange-400 text-black text-xs font-black px-3 py-1 rounded-full z-10 shadow-lg">
                         {item.tag}
                       </div>
 
                       {/* Image */}
-                      <div className="relative h-48 w-full overflow-hidden rounded-lg mb-4">
-                        <img 
-                          src={item.image} 
+                      <div className="relative h-44 w-full overflow-hidden rounded-xl">
+                        <img
+                          src={item.image}
                           alt={item.title}
                           className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-300"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                        
-                        {/* Price tag */}
-                        <div className="absolute bottom-4 right-4 bg-yellow-500 text-black px-4 py-2 rounded-full font-bold">
-                          <span className="text-sm line-through opacity-75 mr-2">{item.originalPrice}</span>
-                          <span>{item.price}</span>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
+                        {/* Price */}
+                        <div className="absolute bottom-3 right-3 bg-gradient-to-r from-yellow-400 to-orange-400 text-black px-3 py-1.5 rounded-xl font-black text-sm shadow-lg">
+                          <span className="line-through opacity-60 mr-1.5 text-xs">{item.originalPrice}</span>
+                          {item.price}
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-4">
-                        <span className="text-2xl bg-yellow-500/10 p-2 rounded-lg">{item.icon}</span>
-                        <div className="flex-1">
-                          <h4 className="text-xl font-semibold group-hover:text-yellow-500 transition-colors">{item.title}</h4>
-                          <p className="text-sm text-gray-300 mt-1">{item.description}</p>
+                      <div className="flex items-start gap-3">
+                        <span className="text-2xl">{item.icon}</span>
+                        <div>
+                          <h4 className="text-base font-bold text-white group-hover:text-yellow-400 transition-colors">
+                            {item.title}
+                          </h4>
+                          <p className="text-gray-400 text-sm mt-0.5">{item.description}</p>
                         </div>
                       </div>
 
-                      <div className="mt-2">
-                        <h5 className="text-sm font-medium text-yellow-500 mb-2">Included Items:</h5>
-                        <ul className="flex flex-wrap gap-2 mb-4">
+                      {/* Included items */}
+                      <div>
+                        <div className="flex flex-wrap gap-1.5 mb-3">
                           {item.items.map((foodItem, idx) => (
-                            <li 
+                            <span
                               key={idx}
-                              className="text-xs bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full flex items-center gap-1"
+                              className="text-xs bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 px-2.5 py-1 rounded-full flex items-center gap-1"
                             >
-                              <Tag className="h-3 w-3" />
+                              <Tag className="h-2.5 w-2.5" />
                               {foodItem}
-                            </li>
+                            </span>
                           ))}
-                        </ul>
-                        
+                        </div>
+
                         <Button
                           onClick={() => handleOrder(item)}
-                          className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-semibold py-3 rounded-lg flex items-center justify-center gap-2 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20"
+                          className="w-full bg-gradient-to-r from-yellow-400 to-orange-400 hover:from-yellow-500 hover:to-orange-500 text-black font-bold py-2.5 rounded-xl flex items-center justify-center gap-2 transition-all duration-300 shadow-lg hover:shadow-yellow-400/25"
                         >
                           <ShoppingBag className="h-4 w-4" />
                           Order Now
@@ -244,70 +268,62 @@ const DealsPage: React.FC = () => {
 
       {/* CTA Section */}
       <motion.div
-        className="bg-yellow-500/10 py-12 mt-8"
+        className="relative border-t border-white/10 py-14 overflow-hidden"
         variants={fadeIn}
         initial="hidden"
         animate="visible"
       >
-        <div className="container mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold text-yellow-500 mb-4">
-            Limited Time Offers!
+        <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/5 via-orange-400/5 to-yellow-400/5 pointer-events-none" />
+        <div className="container mx-auto px-4 text-center max-w-xl relative z-10">
+          <h2 className="text-2xl sm:text-3xl font-black text-white mb-3">
+            Don't Miss Out on{' '}
+            <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              Limited Offers!
+            </span>
           </h2>
-          <div className="flex items-center justify-center gap-2 text-gray-300 mb-6">
-            <Timer className="h-5 w-5 text-yellow-500" />
-            <p>These deals won't last forever. Order now!</p>
+          <div className="flex items-center justify-center gap-2 text-gray-400 mb-6 text-sm">
+            <Timer className="h-4 w-4 text-yellow-400" />
+            These deals won't last forever. Order now!
           </div>
           <Button
-            className="bg-yellow-500 text-black hover:bg-yellow-400 border-2 border-yellow-600 hover:border-yellow-500 p-2 px-8 rounded-full text-lg"
-            onClick={() => navigate('/menu')}
+            className="bg-gradient-to-r from-yellow-400 to-orange-400 text-black hover:from-yellow-500 hover:to-orange-500 font-black px-8 py-3 rounded-xl shadow-xl shadow-yellow-400/20 text-base"
+            onClick={() => navigate('/')}
           >
-            View Full Menu
+            Browse Full Menu
           </Button>
         </div>
       </motion.div>
 
       {/* Footer */}
-      <motion.footer
-        className="bg-black/50 mt-12 py-8 border-t border-white/10"
-        variants={fadeIn}
-        initial="hidden"
-        animate="visible"
-      >
-        <div className="container mx-auto px-4 text-center">
-          <div className="flex justify-center gap-4 mb-4">
-            <a 
-              href="https://instagram.com" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="hover:scale-110 transition-transform"
-              aria-label="Instagram"
-            >
-              <Instagram className="h-6 w-6 text-yellow-500 hover:text-yellow-400" />
-            </a>
-            <a 
-              href="https://twitter.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:scale-110 transition-transform"
-              aria-label="Twitter"
-            >
-              <Twitter className="h-6 w-6 text-yellow-500 hover:text-yellow-400" />
-            </a>
-            <a 
-              href="https://facebook.com" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className="hover:scale-110 transition-transform"
-              aria-label="Facebook"
-            >
-              <Facebook className="h-6 w-6 text-yellow-500 hover:text-yellow-400" />
-            </a>
+      <footer className="border-t border-white/10 bg-black/60 py-8">
+        <div className="container mx-auto px-4 max-w-6xl flex flex-col sm:flex-row items-center justify-between gap-4">
+          <Link to="/" className="flex items-center gap-2 group">
+            <div className="bg-gradient-to-r from-yellow-400 to-yellow-500 p-1.5 rounded-lg">
+              <UtensilsCrossed className="h-4 w-4 text-black" />
+            </div>
+            <span className="font-black text-sm bg-gradient-to-r from-yellow-400 to-yellow-500 bg-clip-text text-transparent">BurgerBite</span>
+          </Link>
+          <div className="flex gap-3">
+            {[
+              { icon: Instagram, href: 'https://instagram.com', label: 'Instagram' },
+              { icon: Twitter, href: 'https://twitter.com', label: 'Twitter' },
+              { icon: Facebook, href: 'https://facebook.com', label: 'Facebook' },
+            ].map(({ icon: Icon, href, label }) => (
+              <a
+                key={label}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={label}
+                className="p-2 rounded-xl bg-white/5 border border-white/10 text-gray-400 hover:text-yellow-400 hover:border-yellow-400/30 transition-all duration-300"
+              >
+                <Icon className="h-4 w-4" />
+              </a>
+            ))}
           </div>
-          <p className="text-sm text-gray-400">
-            © 2025 BurgerBite. All rights reserved.
-          </p>
+          <p className="text-xs text-gray-500">© {new Date().getFullYear()} BurgerBite. All rights reserved.</p>
         </div>
-      </motion.footer>
+      </footer>
     </motion.div>
   );
 };

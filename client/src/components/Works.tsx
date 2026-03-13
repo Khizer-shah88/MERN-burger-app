@@ -1,17 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, UtensilsCrossed, Truck } from 'lucide-react'; // Assuming you're using lucide-react for icons
-
-// Define variants for animations
-const fadeIn = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { duration: 1 } },
-};
+import { MapPin, UtensilsCrossed, Truck } from 'lucide-react';
 
 interface Step {
   icon: React.ElementType;
   title: string;
   description: string;
+  step: number;
+  gradient: string;
 }
 
 interface WorksProps {
@@ -21,95 +17,98 @@ interface WorksProps {
 const Works: React.FC<WorksProps> = ({ navigate }) => {
   const steps: Step[] = [
     {
+      step: 1,
       icon: MapPin,
       title: 'Choose Location',
-      description: 'Enter your address to find the nearest BurgerBite location',
+      description: 'Enter your address to find the nearest BurgerBite location near you.',
+      gradient: 'from-yellow-400 to-yellow-500',
     },
     {
+      step: 2,
       icon: UtensilsCrossed,
       title: 'Pick Your Meal',
-      description: 'Browse our menu and select your favorite burgers',
+      description: 'Browse our mouth-watering menu and pick your favorite burgers.',
+      gradient: 'from-orange-400 to-orange-500',
     },
     {
+      step: 3,
       icon: Truck,
       title: 'Fast Delivery',
-      description: 'Your order will be delivered in 30 minutes or less',
+      description: 'Sit back and relax — your order arrives in 30 minutes or less.',
+      gradient: 'from-yellow-500 to-orange-400',
     },
   ];
 
   return (
-    <motion.section id="how-it-works" className="container py-12 px-4 mx-auto" variants={fadeIn}>
-      <div className="flex flex-col items-center gap-4 text-center mb-12">
-        <h2 className="text-4xl text-yellow-500 font-bold">How It Works</h2>
-        <p className="text-lg max-w-[800px]">Getting your favorite burger is as easy as 1-2-3</p>
+    <section id="how-it-works" className="relative py-16 sm:py-24 px-4 overflow-hidden">
+      {/* Background glows */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-10 left-1/4 w-72 h-72 bg-yellow-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-10 right-1/4 w-56 h-56 bg-orange-500/5 rounded-full blur-3xl" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        {steps.map((step, index) => (
-          <motion.div
-            key={step.title}
-            variants={{
-              hidden: { opacity: 0, y: 20, scale: 0.8 },
-              visible: {
-                opacity: 1,
-                y: 0,
-                scale: 1,
-                transition: {
-                  type: 'spring',
-                  duration: 0.8,
-                  delay: index * 0.2,
-                  bounce: 0.4,
-                },
-              },
-            }}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: '-50px' }}
-            whileHover={{ scale: [1, 1.02], transition: { duration: 0.2 } }}
-            whileTap={{ scale: 0.98 }}
-            onClick={() => navigate(step.title.toLowerCase().replace(' ', '-') === 'choose-location' ? '/location' : '#')}
-            className="w-full cursor-pointer"
-          >
+
+      <div className="container mx-auto max-w-6xl relative z-10">
+        {/* Heading */}
+        <motion.div
+          className="text-center mb-14 sm:mb-20"
+          initial={{ opacity: 0, y: -30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7 }}
+          viewport={{ once: true }}
+        >
+          <span className="inline-block bg-yellow-400/10 text-yellow-400 text-xs sm:text-sm font-bold px-4 py-2 rounded-full border border-yellow-400/20 mb-4 tracking-widest uppercase">
+            Simple Steps
+          </span>
+          <h2 className="text-4xl sm:text-5xl font-black text-white mb-4">
+            How It{' '}
+            <span className="bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">
+              Works
+            </span>
+          </h2>
+          <p className="text-gray-400 text-base sm:text-lg max-w-xl mx-auto">
+            Getting your favorite burger is as easy as 1-2-3
+          </p>
+        </motion.div>
+
+        {/* Steps grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 relative">
+          {/* Connector line – desktop */}
+          <div className="hidden md:block absolute top-[4.5rem] left-[calc(33.33%+2rem)] right-[calc(33.33%+2rem)] h-px bg-gradient-to-r from-yellow-400/20 via-yellow-400/60 to-yellow-400/20" />
+
+          {steps.map((step, index) => (
             <motion.div
-              className="flex flex-col items-center text-center gap-3 sm:gap-4 p-4 sm:p-6 rounded-xl bg-black/20 hover:bg-black/30 transition-colors h-full"
-              whileHover={{
-                boxShadow: '0px 0px 20px rgba(255, 204, 0, 0.3)',
-              }}
+              key={step.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: index * 0.15, duration: 0.6, ease: 'easeOut' }}
+              whileHover={{ y: -6, transition: { duration: 0.25 } }}
+              className="relative group"
             >
-              <motion.div
-                className="rounded-full bg-primary/20 p-3 sm:p-4 ring-1 ring-primary/40"
-                animate={{
-                  scale: [1, 1.1, 1],
-                  rotate: [0, 5, -5, 0],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  repeatDelay: index,
-                }}
-              >
-                <step.icon className="h-5 w-5 sm:h-6 sm:w-6 md:h-8 md:w-8 text-primary" />
-              </motion.div>
-              <motion.h3
-                className="text-base sm:text-lg md:text-xl font-bold"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.3 + index * 0.1 }}
-              >
-                {step.title}
-              </motion.h3>
-              <motion.p
-                className="text-white text-xs sm:text-sm md:text-base"
-                initial={{ opacity: 0 }}
-                whileInView={{ opacity: 1 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-              >
-                {step.description}
-              </motion.p>
+              <div className="relative h-full p-6 sm:p-8 rounded-2xl bg-gray-900/60 border border-white/10 group-hover:border-yellow-400/40 transition-all duration-300 backdrop-blur-sm">
+                {/* Hover glow overlay */}
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-yellow-400/0 to-orange-400/0 group-hover:from-yellow-400/5 group-hover:to-orange-400/5 transition-all duration-300" />
+
+                {/* Step badge */}
+                <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-r from-yellow-400 to-orange-400 rounded-full flex items-center justify-center text-black text-xs font-black shadow-lg shadow-yellow-400/30 z-10">
+                  {step.step}
+                </div>
+
+                {/* Icon */}
+                <div className={`relative z-10 inline-flex p-4 rounded-xl bg-gradient-to-r ${step.gradient} mb-5 shadow-lg`}>
+                  <step.icon className="h-6 w-6 text-black" />
+                </div>
+
+                <h3 className="relative z-10 text-lg sm:text-xl font-bold text-white mb-2">{step.title}</h3>
+                <p className="relative z-10 text-gray-400 text-sm sm:text-base leading-relaxed">
+                  {step.description}
+                </p>
+              </div>
             </motion.div>
-          </motion.div>
-        ))}
+          ))}
+        </div>
       </div>
-    </motion.section>
+    </section>
   );
 };
 

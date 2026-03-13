@@ -362,20 +362,18 @@ export default function Checkout() {
                           <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                         </div>
                         <div>
-                          <h3 className="text-2xl font-bold bg-gradient-to-r from-yellow-500 to-orange-500 text-transparent bg-clip-text">
+                          <h3 className="text-sm sm:text-base font-semibold text-white">
                             {item.name}
                           </h3>
-                          <p className="text-zinc-400 text-lg mt-2">
-                            ${(item.price / 100 + (item.extraCheese ? 1 : 0) + (item.drink === "cola" ? 2.5 : item.drink === "lemonade" ? 2 : item.drink === "water" ? 1.5 : 0)).toFixed(
-                              2
-                            )}
-                            {item.drink && `, ${item.drink}`}
-                            {item.extraCheese && ", Extra Cheese"}
-                            {item.isDeal && " (Deal)"}
+                          <p className="text-zinc-400 text-xs sm:text-sm mt-1">
+                            ${(item.price / 100 + (item.extraCheese ? 1 : 0) + (item.drink === "cola" ? 2.5 : item.drink === "lemonade" ? 2 : item.drink === "water" ? 1.5 : 0)).toFixed(2)}
+                            {item.drink && ` · ${item.drink}`}
+                            {item.extraCheese && ' · Extra Cheese'}
+                            {item.isDeal && ' · Deal'}
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 shrink-0">
                         <input
                           type="number"
                           value={item.quantity || 1}
@@ -384,15 +382,15 @@ export default function Checkout() {
                             updateQuantity(item._id, newQuantity, item.drink, item.extraCheese);
                           }}
                           min="1"
-                          className="w-16 p-1 rounded bg-white/[0.03] border border-white/10 text-white text-center"
+                          className="w-14 p-1.5 rounded-lg bg-white/[0.05] border border-white/10 text-white text-center text-sm focus:border-yellow-500/50 focus:outline-none"
                         />
                         <motion.button
-                          className="text-red-400 hover:text-red-300 p-4 rounded-full hover:bg-red-500/10 transition-all duration-300"
+                          className="text-red-400 hover:text-red-300 p-2 rounded-full hover:bg-red-500/10 transition-all duration-300"
                           onClick={() => handleRemoveFromCart(item._id)}
                           whileHover={{ scale: 1.1, rotate: 12 }}
                           whileTap={{ scale: 0.9 }}
                         >
-                          <Trash2 className="h-6 w-6" />
+                          <Trash2 className="h-4 w-4" />
                         </motion.button>
                       </div>
                     </motion.div>

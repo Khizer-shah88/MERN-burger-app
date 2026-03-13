@@ -154,11 +154,18 @@ useEffect(() => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black text-white p-4">
-        <Skeleton className="h-16 w-full mb-4" />
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <Skeleton key={index} className="h-64 w-full rounded-lg" />
+      <div className="min-h-screen bg-black text-white">
+        <div className="h-20 w-full bg-gray-900/80 animate-pulse" />
+        <div className="max-w-7xl mx-auto px-4 py-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          {Array.from({ length: 6 }).map((_, index) => (
+            <div key={index} className="rounded-3xl bg-gray-900/60 border border-white/10 overflow-hidden animate-pulse">
+              <div className="h-56 bg-gray-800" />
+              <div className="p-6 space-y-3">
+                <div className="h-5 bg-gray-700 rounded w-3/4" />
+                <div className="h-4 bg-gray-700 rounded w-1/2" />
+                <div className="h-10 bg-gray-800 rounded-xl mt-4" />
+              </div>
+            </div>
           ))}
         </div>
       </div>
@@ -183,17 +190,17 @@ useEffect(() => {
         <Navbar />
       </header>
       <motion.div
-        className="fixed bottom-[70%] right-18 z-50"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
+        className="fixed bottom-6 right-6 z-50"
+        initial={{ opacity: 0, scale: 0 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.5, type: 'spring', stiffness: 260, damping: 20 }}
       >
         <Button
-          className="bg-yellow-500 text-black hover:bg-yellow-400 border-2 border-yellow-600 hover:border-yellow-500 p-2 rounded-full"
+          className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-orange-500 border-2 border-black/20 px-4 py-3 rounded-2xl shadow-2xl shadow-yellow-400/30 font-bold flex items-center gap-2 transition-all duration-300"
           onClick={handleViewCart}
         >
           <ShoppingCart className="h-5 w-5" />
-          <span className="ml-2">{cart.length}</span>
+          <span>{cart.length}</span>
         </Button>
       </motion.div>
       <main>
@@ -212,7 +219,7 @@ useEffect(() => {
             setIsSidebarOpen={setIsSidebarOpen}
           />
         </section>
-        <section className="m-12">
+        <section className="mx-4 sm:mx-8 md:mx-12">
           <BurgerMenu />
         </section>
         <section>

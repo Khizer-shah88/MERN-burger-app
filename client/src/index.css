@@ -1,54 +1,88 @@
 @import "tailwindcss";
 
-
 html {
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on mobile */
-  
+  -webkit-overflow-scrolling: touch;
 }
 
 body {
   scroll-behavior: smooth;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  
-  overflow-y: scroll; /* Ensure consistent scrolling */
-  
-   background: black;
-   
+  overflow-y: scroll;
+  background: #000;
 }
 
-/* Custom smooth scroll behavior with easing */
-[data-scroll-container] {
-  scroll-behavior: smooth !important;
-  transition: transform 0.3s ease-out !important;
+/* ── Custom Scrollbar ── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+::-webkit-scrollbar-thumb {
+  background: #facc15;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fbbf24;
 }
 
-/* Optional: Add this to a utility file or component */
-.smooth-scroll {
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
+/* ── Keyframes ── */
+@keyframes gradient-x {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(250, 204, 21, 0.2); }
+  50%       { box-shadow: 0 0 40px rgba(250, 204, 21, 0.5); }
 }
 
+/* ── Utility classes ── */
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradient-x 4s ease infinite;
+}
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
 
-
+/* ── Custom scrollbar for inner panels ── */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(250, 204, 21, 0.4);
+  border-radius: 999px;
+}
 
 @layer base {
-    :root {
-      --primary: 20 100% 50%;
-      --primary-foreground: 60 9.1% 97.8%;
-  
-      --background: 0 0% 0%;
-      --foreground: 0 0% 100%;
-  
-      --muted: 240 3.7% 15.9%;
-      --muted-foreground: 240 5% 64.9%;
-  
-      --border: 240 3.7% 15.9%;
-      --input: 240 3.7% 15.9%;
-      --ring: 240 4.9% 83.9%;
-    }
+  :root {
+    --primary: 20 100% 50%;
+    --primary-foreground: 60 9.1% 97.8%;
+
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
   }
+}
 
 
   

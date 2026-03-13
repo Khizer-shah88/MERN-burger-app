@@ -190,7 +190,7 @@ const PopularBurger: React.FC<PopularBurgerProps> = ({
                           transition={{ type: "spring", stiffness: 400 }}
                         >
                           <div className="bg-black/70 backdrop-blur-xl p-3 rounded-2xl border border-yellow-400/30 shadow-xl">
-                            <span className="font-black text-yellow-400 text-lg">${(restaurant.price / 100).toFixed(2)}</span>
+                            <span className="font-black text-yellow-400 text-lg">${restaurant.price.toFixed(2)}</span>
                           </div>
                         </motion.div>
                         <motion.button
