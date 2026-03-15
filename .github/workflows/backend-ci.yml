@@ -145,6 +145,8 @@ jobs:
             exit 1
           fi
 
+          key_passphrase="$(printf '%s' "${{ secrets.EC2_SSH_PASSPHRASE }}" | tr -d '\r\n')"
+
           raw_key="${{ secrets.EC2_SSH_KEY }}"
           raw_key="$(printf '%s' "$raw_key" | tr -d '\r')"
 
@@ -180,8 +182,14 @@ jobs:
 
           chmod 600 "$RUNNER_TEMP/ec2_deploy_key"
 
-          if ! ssh-keygen -y -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1; then
-            echo "EC2_SSH_KEY is not a valid private key"
+          if [ -n "$key_passphrase" ]; then
+            ssh-keygen -y -P "$key_passphrase" -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1
+          else
+            ssh-keygen -y -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1
+          fi
+
+          if [ $? -ne 0 ]; then
+            echo "EC2_SSH_KEY is invalid, or the key is encrypted and requires EC2_SSH_PASSPHRASE."
             exit 1
           fi
 
@@ -197,6 +205,7 @@ jobs:
           host: ${{ steps.deploy-vars.outputs.ec2_host }}
           username: ${{ steps.deploy-vars.outputs.ec2_user }}
           key: ${{ steps.deploy-vars.outputs.ec2_key }}
+          passphrase: ${{ secrets.EC2_SSH_PASSPHRASE }}
           script: |
             # 1. Login to Docker Hub
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
