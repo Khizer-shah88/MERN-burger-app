@@ -120,12 +120,41 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Prepare SSH key
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "EC2_SSH_KEY secret is empty"
+            exit 1
+          fi
+
+          if echo "${{ secrets.EC2_SSH_KEY }}" | grep -q "\\\\n"; then
+            printf "%b" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_deploy_key
+          else
+            printf "%s" "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_deploy_key
+          fi
+
+          tr -d '\r' < ~/.ssh/ec2_deploy_key > ~/.ssh/ec2_deploy_key.tmp && mv ~/.ssh/ec2_deploy_key.tmp ~/.ssh/ec2_deploy_key
+
+          if ! grep -q "BEGIN .* PRIVATE KEY" ~/.ssh/ec2_deploy_key; then
+            echo "EC2_SSH_KEY secret is not a valid private key (missing BEGIN header)"
+            exit 1
+          fi
+
+          if ! grep -q "END .* PRIVATE KEY" ~/.ssh/ec2_deploy_key; then
+            echo "EC2_SSH_KEY secret is not a valid private key (missing END footer)"
+            exit 1
+          fi
+
+          chmod 600 ~/.ssh/ec2_deploy_key
+
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key_path: ~/.ssh/ec2_deploy_key
           script: |
             # 1. Login to Docker Hub
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
