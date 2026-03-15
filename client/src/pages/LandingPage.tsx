@@ -2,7 +2,6 @@
 import { useState, useEffect, useContext } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
-import { Skeleton } from "@/components/ui/skeleton"
 import { X, ShoppingCart, Trash2 } from "lucide-react"
 import { useNavigate, useLocation } from "react-router-dom"
 import SimpleBurgerSlider from "@/components/simple-burger-slider"
@@ -59,7 +58,6 @@ export default function Landing() {
   const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [selectedBurger, setSelectedBurger] = useState<Restaurant | null>(null)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [drinkOption, setDrinkOption] = useState<string>("cola")
@@ -67,9 +65,7 @@ export default function Landing() {
   const navigate = useNavigate()
   const location = useLocation()
 
-  // Fetch restaurants from backend
- // In LandingPage.tsx, inside the component
-useEffect(() => {
+  useEffect(() => {
     let isMounted = true;
 
     const fetchRestaurants = async () => {
@@ -111,6 +107,12 @@ useEffect(() => {
       isMounted = false;
     };
   }, []);
+
+  const popularCount = restaurants.filter((item) => item.popular).length
+  const avgPrice =
+    restaurants.length > 0
+      ? (restaurants.reduce((sum, item) => sum + item.price, 0) / restaurants.length / 100).toFixed(2)
+      : "0.00"
 
   
 
@@ -183,34 +185,55 @@ useEffect(() => {
     );
   }
 
-  // ... rest of the JSX unchanged (sidebar, Hero, PopularBurger, etc.)
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+    <div className="relative min-h-screen overflow-x-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_14%_20%,rgba(250,204,21,0.16),transparent_32%),radial-gradient(circle_at_85%_8%,rgba(251,146,60,0.12),transparent_28%),radial-gradient(circle_at_50%_88%,rgba(255,255,255,0.06),transparent_26%)]" />
+      </div>
       <header>
         <Navbar />
       </header>
       <motion.div
-        className="fixed bottom-6 right-6 z-50"
+        className="fixed bottom-5 right-4 z-50 sm:bottom-6 sm:right-6"
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5, type: 'spring', stiffness: 260, damping: 20 }}
       >
         <Button
-          className="bg-gradient-to-r from-yellow-400 to-yellow-500 text-black hover:from-yellow-500 hover:to-orange-500 border-2 border-black/20 px-4 py-3 rounded-2xl shadow-2xl shadow-yellow-400/30 font-bold flex items-center gap-2 transition-all duration-300"
+          className="rounded-2xl border-2 border-black/20 bg-gradient-to-r from-yellow-400 to-yellow-500 px-4 py-3 font-bold text-black shadow-2xl shadow-yellow-400/30 transition-all duration-300 hover:from-yellow-500 hover:to-orange-500 sm:px-5"
           onClick={handleViewCart}
         >
           <ShoppingCart className="h-5 w-5" />
           <span>{cart.length}</span>
         </Button>
       </motion.div>
-      <main>
+      <main className="relative z-10">
         <section>
           <Hero setIsSidebarOpen={setIsSidebarOpen} navigate={navigate} />
         </section>
-        <section>
+
+        <section className="mx-auto -mt-8 w-[94%] max-w-6xl pb-2 sm:-mt-10 md:-mt-12">
+          <div className="grid grid-cols-1 gap-4 rounded-3xl border border-white/10 bg-zinc-900/70 p-4 backdrop-blur-md sm:grid-cols-3 sm:p-5">
+            <div className="rounded-2xl border border-yellow-400/20 bg-black/40 p-4 text-center">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">Popular Picks</p>
+              <p className="mt-1 text-2xl font-black text-yellow-400 sm:text-3xl">{popularCount}</p>
+            </div>
+            <div className="rounded-2xl border border-yellow-400/20 bg-black/40 p-4 text-center">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">Average Price</p>
+              <p className="mt-1 text-2xl font-black text-yellow-400 sm:text-3xl">${avgPrice}</p>
+            </div>
+            <div className="rounded-2xl border border-yellow-400/20 bg-black/40 p-4 text-center">
+              <p className="text-xs uppercase tracking-[0.2em] text-zinc-400">Live Cart</p>
+              <p className="mt-1 text-2xl font-black text-yellow-400 sm:text-3xl">{cart.length}</p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mx-auto w-[96%] max-w-7xl">
           <SimpleBurgerSlider />
         </section>
-        <section>
+
+        <section className="mx-auto w-[96%] max-w-7xl">
           <PopularBurger
             restaurants={restaurants}
             setSelectedBurger={(burger) => {
@@ -219,16 +242,20 @@ useEffect(() => {
             setIsSidebarOpen={setIsSidebarOpen}
           />
         </section>
-        <section className="mx-4 sm:mx-8 md:mx-12">
+
+        <section className="mx-auto w-[96%] max-w-7xl">
           <BurgerMenu />
         </section>
-        <section>
+
+        <section className="mx-auto w-[96%] max-w-7xl">
           <Works navigate={navigate} />
         </section>
-        <section>
+
+        <section className="mx-auto w-[96%] max-w-7xl pb-8 sm:pb-12">
           <Offers navigate={navigate} onSelectDeal={() => {}} />
         </section>
-        <section>
+
+        <section className="mx-auto w-[96%] max-w-7xl pb-8 sm:pb-10">
           <AppLoad navigate={navigate} />
         </section>
         <footer>
