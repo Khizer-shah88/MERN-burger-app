@@ -183,14 +183,15 @@ jobs:
           chmod 600 "$RUNNER_TEMP/ec2_deploy_key"
 
           if [ -n "$key_passphrase" ]; then
-            ssh-keygen -y -P "$key_passphrase" -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1
+            if ! ssh-keygen -y -P "$key_passphrase" -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1; then
+              echo "Error: EC2_SSH_KEY is invalid, or it is encrypted and the provided passphrase is wrong."
+              exit 1
+            fi
           else
-            ssh-keygen -y -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1
-          fi
-
-          if [ $? -ne 0 ]; then
-            echo "EC2_SSH_KEY is invalid, or the key is encrypted and requires EC2_SSH_PASSPHRASE."
-            exit 1
+            if ! ssh-keygen -y -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1; then
+              echo "Error: EC2_SSH_KEY is invalid, or it is encrypted and requires a passphrase (EC2_SSH_PASSPHRASE is not set)."
+              exit 1
+            fi
           fi
 
           {
