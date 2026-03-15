@@ -145,17 +145,36 @@ jobs:
             exit 1
           fi
 
-          if echo "${{ secrets.EC2_SSH_KEY }}" | grep -q "\\\\n"; then
-            printf "%b" "${{ secrets.EC2_SSH_KEY }}" > "$RUNNER_TEMP/ec2_deploy_key"
+          raw_key="${{ secrets.EC2_SSH_KEY }}"
+          raw_key="$(printf '%s' "$raw_key" | tr -d '\r')"
+
+          # Remove accidental wrapping quotes from secret value.
+          if [[ "$raw_key" == \"*\" && "$raw_key" == *\" ]]; then
+            raw_key="${raw_key:1:${#raw_key}-2}"
+          fi
+          if [[ "$raw_key" == \''*\' && "$raw_key" == *\' ]]; then
+            raw_key="${raw_key:1:${#raw_key}-2}"
+          fi
+
+          # Support both multiline PEM and single-line values with escaped newlines.
+          if printf '%s' "$raw_key" | grep -q "\\\\n"; then
+            printf "%b" "$raw_key" > "$RUNNER_TEMP/ec2_deploy_key"
           else
-            printf "%s" "${{ secrets.EC2_SSH_KEY }}" > "$RUNNER_TEMP/ec2_deploy_key"
+            printf "%s" "$raw_key" > "$RUNNER_TEMP/ec2_deploy_key"
+          fi
+
+          # Fallback: allow a base64-encoded key in the same secret.
+          if ! grep -q "BEGIN .* PRIVATE KEY" "$RUNNER_TEMP/ec2_deploy_key"; then
+            if printf '%s' "$raw_key" | base64 -d > "$RUNNER_TEMP/ec2_deploy_key" 2>/dev/null; then
+              :
+            fi
           fi
 
           tr -d '\r' < "$RUNNER_TEMP/ec2_deploy_key" > "$RUNNER_TEMP/ec2_deploy_key.tmp"
           mv "$RUNNER_TEMP/ec2_deploy_key.tmp" "$RUNNER_TEMP/ec2_deploy_key"
 
-          if ! grep -q "BEGIN .* PRIVATE KEY" "$RUNNER_TEMP/ec2_deploy_key"; then
-            echo "EC2_SSH_KEY does not look like a private key"
+          if ! grep -q "BEGIN .* PRIVATE KEY" "$RUNNER_TEMP/ec2_deploy_key" || ! grep -q "END .* PRIVATE KEY" "$RUNNER_TEMP/ec2_deploy_key"; then
+            echo "EC2_SSH_KEY must be a valid PEM private key (raw multiline, escaped \\n, or base64-encoded PEM)."
             exit 1
           fi
 
