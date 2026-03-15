@@ -159,14 +159,25 @@ jobs:
             exit 1
           fi
 
-          chmod 644 "$RUNNER_TEMP/ec2_deploy_key"
+          chmod 600 "$RUNNER_TEMP/ec2_deploy_key"
+
+          if ! ssh-keygen -y -f "$RUNNER_TEMP/ec2_deploy_key" >/dev/null 2>&1; then
+            echo "EC2_SSH_KEY is not a valid private key"
+            exit 1
+          fi
+
+          {
+            echo "ec2_key<<EOF"
+            cat "$RUNNER_TEMP/ec2_deploy_key"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
 
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ steps.deploy-vars.outputs.ec2_host }}
           username: ${{ steps.deploy-vars.outputs.ec2_user }}
-          key_path: /github/runner_temp/ec2_deploy_key
+          key: ${{ steps.deploy-vars.outputs.ec2_key }}
           script: |
             # 1. Login to Docker Hub
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
