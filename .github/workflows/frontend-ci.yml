@@ -177,18 +177,12 @@ jobs:
             exit 1
           fi
 
-          {
-            echo "ec2_key<<EOF"
-            cat "$RUNNER_TEMP/ec2_deploy_key"
-            echo "EOF"
-          } >> "$GITHUB_OUTPUT"
-
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ steps.deploy-vars.outputs.ec2_host }}
           username: ${{ steps.deploy-vars.outputs.ec2_user }}
-          key: ${{ steps.deploy-vars.outputs.ec2_key }}
+          key_path: /github/runner_temp/ec2_deploy_key
           script: |
             # 1. Login to Docker Hub
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
