@@ -148,7 +148,7 @@ export default function Landing() {
     setSelectedBurger(null);
   };
 
-  // Handle view cart control
+  // Handle view cart controlss
   const handleViewCart = () => {
     setSelectedBurger(null);
     setIsSidebarOpen(true);
