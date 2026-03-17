@@ -252,5 +252,9 @@ jobs:
               -p 3000:80 \
               khizershah11/burger-frontend:latest
 
-            # 7. Cleanup old images to save disk space
+            # 7. Seed Database (Sleep to give backend time to connect to mongo)
+            sleep 5
+            curl -X POST http://localhost:5000/api/restaurants/initialize || echo "Failed to seed DB"
+
+            # 8. Cleanup old images to save disk space
             docker image prune -f
