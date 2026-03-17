@@ -224,12 +224,25 @@ jobs:
             # 4. Stop and remove old containers
             docker rm -f burger-frontend burger-backend || true
 
+            # 4.5. Ensure MongoDB is running
+            if ! docker ps -a --format '{{.Names}}' | grep -Eq "^mongodb$"; then
+              docker run -d \
+                --name mongodb \
+                --network burger-app_burger-net \
+                -v mongodb_data:/data/db \
+                -p 27017:27017 \
+                -e MONGO_INITDB_DATABASE=burger-app \
+                mongo:7-jammy
+            fi
+
             # 5. Run Backend
             docker run -d \
               --name burger-backend \
               --network burger-app_burger-net \
               -p 5000:5000 \
-              -e MONGODB_URI=mongodb://mongodb:27017/burgerdb \
+              -e NODE_ENV=production \
+              -e MONGODB_URI="${{ secrets.MONGODB_URI || 'mongodb://mongodb:27017/burger-app' }}" \
+              -e JWT_SECRET="${{ secrets.JWT_SECRET || 'your-super-secret-jwt-key' }}" \
               khizershah11/burger-backend:latest
 
             # 6. Run Frontend
